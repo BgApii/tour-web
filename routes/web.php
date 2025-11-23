@@ -80,7 +80,7 @@ Route::middleware(['auth','role:admin'])
         Route::put('/paket/{paketTour}/hide', [AdminPaketController::class, 'hide'])
             ->name('paket.hide');
         Route::put('/paket/{paketTour}/show', [AdminPaketController::class, 'showPaket'])
-            ->name('paket.show');
+            ->name('paket.visible');
 
         // kelola pesanan
         Route::get('/pesanan', [PesananControllerAdmin::class, 'index'])->name('pesanan.index');

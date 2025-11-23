@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nama_paket');
             $table->string('banner');
             $table->text('destinasi');
-            $table->text('highlight');
+            $table->text('include')->nullable();
             $table->decimal('harga_per_peserta', 12, 2);
             $table->date('jadwal_keberangkatan');
             $table->integer('kuota');
@@ -24,7 +24,6 @@ return new class extends Migration
             $table->boolean('wajib_paspor')->default(false);
             $table->boolean('wajib_identitas')->default(true);
             $table->boolean('tampil_di_katalog')->default(true);
-            $table->enum('status_paket', ['aktif', 'nonaktif'])->default('aktif');
             $table->timestamps();
         });
     }

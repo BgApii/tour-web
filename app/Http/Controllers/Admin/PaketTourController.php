@@ -23,10 +23,34 @@ class PaketTourController extends Controller
     {
         $request->validate([
             'nama_paket' => 'required',
-            'harga_per_peserta' => 'required|numeric'
+            'banner' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'destinasi' => 'required',
+            'include' => 'required|string',
+            'harga_per_peserta' => 'required|numeric',
+            'jadwal_keberangkatan' => 'required|date',
+            'kuota' => 'required|integer|min:1',
+            'durasi' => 'required|integer|min:1',
+            'wajib_paspor' => 'boolean',
+            'wajib_identitas' => 'boolean',
+            'tampil_di_katalog' => 'boolean',
         ]);
 
-        PaketTour::create($request->all());
+        $data = $request->only([
+            'nama_paket',
+            'destinasi',
+            'include',
+            'harga_per_peserta',
+            'jadwal_keberangkatan',
+            'kuota',
+            'durasi',
+        ]);
+
+        $data['wajib_paspor'] = $request->boolean('wajib_paspor');
+        $data['wajib_identitas'] = $request->boolean('wajib_identitas');
+        $data['tampil_di_katalog'] = $request->boolean('tampil_di_katalog');
+        $data['banner'] = $request->file('banner')->store('banners', 'public');
+
+        PaketTour::create($data);
 
         return redirect()->route('admin.paket.index');
     }
@@ -38,7 +62,39 @@ class PaketTourController extends Controller
 
     public function update(Request $request, PaketTour $paketTour)
     {
-        $paketTour->update($request->all());
+        $request->validate([
+            'nama_paket' => 'required',
+            'banner' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'destinasi' => 'required',
+            'include' => 'required|string',
+            'harga_per_peserta' => 'required|numeric',
+            'jadwal_keberangkatan' => 'required|date',
+            'kuota' => 'required|integer|min:1',
+            'durasi' => 'required|integer|min:1',
+            'wajib_paspor' => 'boolean',
+            'wajib_identitas' => 'boolean',
+            'tampil_di_katalog' => 'boolean',
+        ]);
+
+        $data = $request->only([
+            'nama_paket',
+            'destinasi',
+            'include',
+            'harga_per_peserta',
+            'jadwal_keberangkatan',
+            'kuota',
+            'durasi',
+        ]);
+
+        $data['wajib_paspor'] = $request->boolean('wajib_paspor');
+        $data['wajib_identitas'] = $request->boolean('wajib_identitas');
+        $data['tampil_di_katalog'] = $request->boolean('tampil_di_katalog');
+
+        if ($request->hasFile('banner')) {
+            $data['banner'] = $request->file('banner')->store('banners', 'public');
+        }
+
+        $paketTour->update($data);
         return redirect()->route('admin.paket.index');
     }
 

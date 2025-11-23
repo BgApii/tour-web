@@ -10,15 +10,22 @@ class PaketTour extends Model
         'nama_paket',
         'banner',
         'destinasi',
-        'highlight',
+        'include',
         'harga_per_peserta',
         'jadwal_keberangkatan',
         'kuota',
         'durasi',
         'wajib_paspor',
         'wajib_identitas',
-        'tampil_di_katalog',
-        'status_paket'
+        'tampil_di_katalog'
+    ];
+
+    protected $casts = [
+        'jadwal_keberangkatan' => 'date',
+        'wajib_paspor' => 'boolean',
+        'wajib_identitas' => 'boolean',
+        'tampil_di_katalog' => 'boolean',
+        'harga_per_peserta' => 'decimal:2',
     ];
 
     public function pesanans()
