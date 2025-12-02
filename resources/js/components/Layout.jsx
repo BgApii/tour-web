@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, NavLink, Outlet } from 'react-router-dom';
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../providers/AuthProvider';
 
 function NavItem({ to, label }) {
@@ -24,6 +24,8 @@ export default function Layout() {
     const isAdmin = user?.role === 'admin';
     const isOwner = user?.role === 'owner';
     const isAdminOrOwner = isAdmin || isOwner;
+    const location = useLocation();
+    const isLoginPage = location.pathname === '/login';
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
@@ -40,18 +42,20 @@ export default function Layout() {
                             <p className="text-lg font-bold text-slate-900">Travel Planner</p>
                         </div>
                     </Link>
-                    <nav className="flex items-center gap-2">
-                        {!isAdminOrOwner && <NavItem to="/" label="Katalog" />}
-                        {user?.role === 'customer' && <NavItem to="/pesanan-saya" label="Pesanan Saya" />}
-                        {isAdmin && (
-                            <>
-                                <NavItem to="/admin/paket" label="Kelola Paket" />
-                                <NavItem to="/admin/pesanan" label="Kelola Pesanan" />
-                            </>
-                        )}
-                        {isOwner && <NavItem to="/owner/rekapitulasi" label="Rekap" />}
-                        {isAdminOrOwner && <NavItem to="/profil" label="Profil" />}
-                    </nav>
+                    {!isLoginPage && (
+                        <nav className="flex items-center gap-2">
+                            {!isAdminOrOwner && <NavItem to="/" label="Katalog" />}
+                            {user?.role === 'customer' && <NavItem to="/pesanan-saya" label="Pesanan Saya" />}
+                            {isAdmin && (
+                                <>
+                                    <NavItem to="/admin/paket" label="Kelola Paket" />
+                                    <NavItem to="/admin/pesanan" label="Kelola Pesanan" />
+                                </>
+                            )}
+                            {isOwner && <NavItem to="/owner/rekapitulasi" label="Rekap" />}
+                            {isAdminOrOwner && <NavItem to="/profil" label="Profil" />}
+                        </nav>
+                    )}
                     <div className="flex items-center gap-2">
                         {user ? (
                             <>
@@ -69,7 +73,8 @@ export default function Layout() {
                         ) : (
                             <Link
                                 to="/login"
-                                className="px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
+                                className={`px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 ${isLoginPage ? 'hidden' : ''
+                                    }`}
                             >
                                 Login
                             </Link>

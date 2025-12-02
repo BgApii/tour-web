@@ -28,6 +28,13 @@ export default function LoginPage() {
 
     return (
         <div className="max-w-md mx-auto bg-white border border-slate-200 rounded-3xl shadow-lg p-8 space-y-6">
+            <button
+                type="button"
+                onClick={() => navigate('/')}
+                className="inline-flex items-center gap-2 text-sm font-semibold text-slate-700 hover:text-indigo-700"
+            >
+                <span className="text-lg">←</span> Kembali ke Katalog
+            </button>
             <div>
                 <p className="text-sm uppercase tracking-[0.2em] text-indigo-600 font-semibold">Halaman Login</p>
                 <h1 className="text-2xl font-bold text-slate-900">Masuk ke akunmu</h1>
