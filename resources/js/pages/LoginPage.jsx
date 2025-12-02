@@ -17,8 +17,16 @@ export default function LoginPage() {
         setLoading(true);
         setError(null);
         try {
-            await login(form);
-            navigate(redirectTo, { replace: true });
+            const result = await login(form);
+            const loggedInUser = result?.user ?? result?.data ?? null;
+            const role = loggedInUser?.role;
+            if (role === 'owner') {
+                navigate('/owner/rekapitulasi', { replace: true });
+            } else if (role === 'admin') {
+                navigate('/admin/paket', { replace: true });
+            } else {
+                navigate(redirectTo, { replace: true });
+            }
         } catch (err) {
             setError(err.response?.data?.message || 'Login gagal');
         } finally {

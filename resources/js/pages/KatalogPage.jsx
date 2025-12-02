@@ -1,10 +1,21 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import useFetch from "../hooks/useFetch";
 import { formatTanggalIndo } from "../utils/date";
+import { useAuth } from "../providers/AuthProvider";
 
 const KatalogPage = () => {
     const { data: paket, loading, error } = useFetch("/api/paket");
+    const { user } = useAuth();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (user?.role === "owner") {
+            navigate("/owner/rekapitulasi", { replace: true });
+        } else if (user?.role === "admin") {
+            navigate("/admin/paket", { replace: true });
+        }
+    }, [user, navigate]);
 
     return (
         <div className="space-y-8">

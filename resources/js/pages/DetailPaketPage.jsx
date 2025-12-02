@@ -1,11 +1,22 @@
-import React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import useFetch from '../hooks/useFetch';
 import { formatTanggalIndo } from '../utils/date';
+import { useAuth } from '../providers/AuthProvider';
 
 const DetailPaketPage = () => {
     const { id } = useParams();
     const { data: paket, loading, error } = useFetch(`/api/paket/${id}`);
+    const { user } = useAuth();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (user?.role === 'owner') {
+            navigate('/owner/rekapitulasi', { replace: true });
+        } else if (user?.role === 'admin') {
+            navigate('/admin/paket', { replace: true });
+        }
+    }, [user, navigate]);
 
     if (loading) return <p className="text-slate-600">Memuat detail paket...</p>;
     if (error) return <p className="text-red-600">Gagal memuat paket</p>;
