@@ -23,6 +23,7 @@ import {
 import KelolaPaketPage from './pages/admin/KelolaPaketPage';
 import PaketFormPage from './pages/admin/PaketFormPage';
 import KelolaPesananPage from './pages/admin/KelolaPesananPage';
+import PesananPage from './pages/admin/PesananPage';
 import PesertaAdminPage from './pages/admin/PesertaAdminPage';
 import RekapitulasiPage from './pages/owner/RekapitulasiPage';
 
@@ -138,7 +139,8 @@ export default function App() {
                     <Route path="paket/buat" element={<PaketFormPage />} />
                     <Route path="paket/:id/edit" element={<PaketFormPage />} />
                     <Route path="pesanan" element={<KelolaPesananPage />} />
-                    <Route path="pesanan/:id" element={<PesertaAdminPage />} />
+                    <Route path="pesanan/paket/:paketId" element={<PesananPage />} />
+                    <Route path="pesanan/order/:id" element={<PesertaAdminPage />} />
                 </Route>
 
                 <Route
