@@ -21,7 +21,9 @@ function NavItem({ to, label }) {
 
 export default function Layout() {
     const { user, logout } = useAuth();
-    const isAdminOrOwner = user?.role === 'admin' || user?.role === 'owner';
+    const isAdmin = user?.role === 'admin';
+    const isOwner = user?.role === 'owner';
+    const isAdminOrOwner = isAdmin || isOwner;
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
@@ -41,8 +43,13 @@ export default function Layout() {
                     <nav className="flex items-center gap-2">
                         {!isAdminOrOwner && <NavItem to="/" label="Katalog" />}
                         {user?.role === 'customer' && <NavItem to="/pesanan-saya" label="Pesanan Saya" />}
-                        {isAdminOrOwner && <NavItem to="/admin" label="Admin" />}
-                        {user?.role === 'owner' && <NavItem to="/owner/rekapitulasi" label="Rekap" />}
+                        {isAdmin && (
+                            <>
+                                <NavItem to="/admin/paket" label="Kelola Paket" />
+                                <NavItem to="/admin/pesanan" label="Kelola Pesanan" />
+                            </>
+                        )}
+                        {isOwner && <NavItem to="/owner/rekapitulasi" label="Rekap" />}
                         {isAdminOrOwner && <NavItem to="/profil" label="Profil" />}
                     </nav>
                     <div className="flex items-center gap-2">
