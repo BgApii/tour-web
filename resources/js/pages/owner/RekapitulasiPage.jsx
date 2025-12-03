@@ -2,14 +2,15 @@ import React, { useMemo, useState } from 'react';
 import useFetch from '../../hooks/useFetch';
 
 export default function RekapitulasiPage() {
-    const [filters, setFilters] = useState({ bulan: '', tahun: '' });
+    const [draftFilters, setDraftFilters] = useState({ bulan: '', tahun: '' });
+    const [appliedFilters, setAppliedFilters] = useState({ bulan: '', tahun: '' });
     const query = useMemo(() => {
         const params = new URLSearchParams();
-        if (filters.bulan) params.set('bulan', filters.bulan);
-        if (filters.tahun) params.set('tahun', filters.tahun);
+        if (appliedFilters.bulan) params.set('bulan', appliedFilters.bulan);
+        if (appliedFilters.tahun) params.set('tahun', appliedFilters.tahun);
         const qs = params.toString();
         return qs ? `/owner/rekapitulasi?${qs}` : '/owner/rekapitulasi';
-    }, [filters]);
+    }, [appliedFilters]);
 
     const { data: rekap, loading, error, refetch } = useFetch(query);
 
@@ -48,10 +49,10 @@ export default function RekapitulasiPage() {
     );
 
     const getJudul = () => {
-        const bulanLabel = bulanOptions.find((b) => String(b.value) === String(filters.bulan))?.label ?? '';
-        if (!filters.bulan && !filters.tahun) return 'Rekapitulasi Penjualan';
-        if (!filters.bulan && filters.tahun) return `Rekapitulasi Penjualan Tahun ${filters.tahun}`;
-        return `Rekapitulasi Penjualan Bulan ${bulanLabel} Tahun ${filters.tahun || '-'}`;
+        const bulanLabel = bulanOptions.find((b) => String(b.value) === String(appliedFilters.bulan))?.label ?? '';
+        if (!appliedFilters.bulan && !appliedFilters.tahun) return 'Rekapitulasi Penjualan';
+        if (!appliedFilters.bulan && appliedFilters.tahun) return `Rekapitulasi Penjualan Tahun ${appliedFilters.tahun}`;
+        return `Rekapitulasi Penjualan Bulan ${bulanLabel} Tahun ${appliedFilters.tahun || '-'}`;
     };
 
     const handlePrint = () => {
@@ -124,8 +125,8 @@ export default function RekapitulasiPage() {
                     <label className="text-sm font-semibold text-slate-700">Bulan</label>
                     <select
                         className="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500"
-                        value={filters.bulan}
-                        onChange={(e) => setFilters((prev) => ({ ...prev, bulan: e.target.value }))}
+                        value={draftFilters.bulan}
+                        onChange={(e) => setDraftFilters((prev) => ({ ...prev, bulan: e.target.value }))}
                     >
                         {bulanOptions.map((opt) => (
                             <option key={opt.value} value={opt.value}>
@@ -140,19 +141,22 @@ export default function RekapitulasiPage() {
                         type="number"
                         placeholder="cth: 2024"
                         className="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500"
-                        value={filters.tahun}
-                        onChange={(e) => setFilters((prev) => ({ ...prev, tahun: e.target.value }))}
+                        value={draftFilters.tahun}
+                        onChange={(e) => setDraftFilters((prev) => ({ ...prev, tahun: e.target.value }))}
                     />
                 </div>
                 <div className="flex items-center gap-2">
                     <button
-                        onClick={refetch}
+                        onClick={() => setAppliedFilters(draftFilters)}
                         className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700"
                     >
                         Terapkan
                     </button>
                     <button
-                        onClick={() => setFilters({ bulan: '', tahun: '' })}
+                        onClick={() => {
+                            setDraftFilters({ bulan: '', tahun: '' });
+                            setAppliedFilters({ bulan: '', tahun: '' });
+                        }}
                         className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-50"
                     >
                         Reset
