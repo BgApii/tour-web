@@ -10,11 +10,6 @@ const api = axios.create({
     xsrfHeaderName: 'X-XSRF-TOKEN',
 });
 
-const csrf = document.head.querySelector('meta[name="csrf-token"]');
-if (csrf) {
-    api.defaults.headers.common['X-CSRF-TOKEN'] = csrf.content;
-}
-
 api.interceptors.response.use(
     (response) => response,
     (error) => {
