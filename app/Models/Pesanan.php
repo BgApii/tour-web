@@ -11,6 +11,7 @@ class Pesanan extends Model
         'paket_id',
         'jumlah_peserta',
         'status_pesanan',
+        'alasan_penolakan',
         'tanggal_pemesanan',
     ];
 
@@ -27,5 +28,10 @@ class Pesanan extends Model
     public function pesertas()
     {
         return $this->hasMany(Peserta::class);
+    }
+
+    public function pembayarans()
+    {
+        return $this->hasMany(Pembayaran::class, 'id_pesanan');
     }
 }

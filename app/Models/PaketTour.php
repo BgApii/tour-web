@@ -15,7 +15,8 @@ class PaketTour extends Model
         'harga_per_peserta',
         'jadwal_keberangkatan',
         'kuota',
-        'durasi',
+        'lama_hari',
+        'lama_malam',
         'wajib_paspor',
         'wajib_identitas',
         'tampil_di_katalog'

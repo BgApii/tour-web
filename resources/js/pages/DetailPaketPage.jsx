@@ -72,7 +72,11 @@ const DetailPaketPage = () => {
                         </div>
                         <div className="border border-slate-200 rounded-2xl px-4 py-3 bg-slate-50">
                             <p className="text-xs uppercase tracking-wide text-slate-500">Durasi</p>
-                            <p className="text-lg font-semibold text-slate-900">{paket.durasi ? `${paket.durasi} hari` : '-'}</p>
+                            <p className="text-lg font-semibold text-slate-900">
+                                {paket.lama_hari != null && paket.lama_malam != null
+                                    ? `${paket.lama_hari} Hari/${paket.lama_malam} Malam`
+                                    : '-'}
+                            </p>
                         </div>
                         <div className="border border-slate-200 rounded-2xl px-4 py-3 bg-slate-50">
                             <p className="text-xs uppercase tracking-wide text-slate-500">Kuota</p>

@@ -19,7 +19,8 @@ export default function PaketFormPage() {
         harga_per_peserta: '',
         jadwal_keberangkatan: '',
         kuota: '',
-        durasi: '',
+        lama_hari: '',
+        lama_malam: '',
         wajib_paspor: false,
         wajib_identitas: false,
         tampil_di_katalog: true,
@@ -35,6 +36,8 @@ export default function PaketFormPage() {
                 tampil_di_katalog: Boolean(existing.tampil_di_katalog),
                 wajib_paspor: Boolean(existing.wajib_paspor),
                 wajib_identitas: Boolean(existing.wajib_identitas),
+                lama_hari: existing.lama_hari ?? '',
+                lama_malam: existing.lama_malam ?? '',
             }));
         }
     }, [existing]);
@@ -132,15 +135,27 @@ export default function PaketFormPage() {
                             required
                         />
                     </div>
-                    <div>
-                        <label className="text-sm font-semibold text-slate-700">Durasi (hari)</label>
-                        <input
-                            type="number"
-                            className="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500"
-                            value={form.durasi}
-                            onChange={(e) => updateField('durasi', e.target.value)}
-                            required
-                        />
+                    <div className="grid grid-cols-2 gap-3">
+                        <div>
+                            <label className="text-sm font-semibold text-slate-700">Lama (hari)</label>
+                            <input
+                                type="number"
+                                className="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500"
+                                value={form.lama_hari}
+                                onChange={(e) => updateField('lama_hari', e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label className="text-sm font-semibold text-slate-700">Lama (malam)</label>
+                            <input
+                                type="number"
+                                className="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500"
+                                value={form.lama_malam}
+                                onChange={(e) => updateField('lama_malam', e.target.value)}
+                                required
+                            />
+                        </div>
                     </div>
                     <div>
                         <label className="text-sm font-semibold text-slate-700">Include</label>

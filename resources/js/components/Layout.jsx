@@ -29,7 +29,7 @@ export default function Layout() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
-            <header className="border-b border-slate-200 bg-white/80 backdrop-blur">
+            <header className="border-b border-slate-200 bg-white/80 backdrop-blur sticky top-0 z-30">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between gap-4">
                     <Link to="/" className="flex items-center gap-2">
                         <span className="h-10 w-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold shadow-md">

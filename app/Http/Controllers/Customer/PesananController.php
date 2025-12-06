@@ -47,4 +47,30 @@ class PesananController extends Controller
 
         return redirect('/pesanan-saya');
     }
+
+    public function markSelesai(Request $request, Pesanan $pesanan)
+    {
+        if ($pesanan->user_id !== $request->user()->id) {
+            abort(403);
+        }
+
+        if ($pesanan->status_pesanan !== 'pembayaran_selesai') {
+            return response()->json([
+                'message' => 'Pesanan belum bisa diselesaikan',
+            ], 422);
+        }
+
+        $pesanan->update([
+            'status_pesanan' => 'pesanan_selesai',
+        ]);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'Pesanan ditandai selesai',
+                'data' => $pesanan->fresh(),
+            ]);
+        }
+
+        return redirect('/pesanan-saya')->with('success', 'Pesanan selesai');
+    }
 }

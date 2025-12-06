@@ -39,7 +39,7 @@ class PesertaController extends Controller
                 'mimes:jpg,jpeg,png,webp',
                 'max:2048',
             ],
-            'peserta.*.paspor' => [
+            'peserta.*.foto_paspor' => [
                 Rule::requiredIf($wajibPaspor),
                 'nullable',
                 'image',
@@ -55,8 +55,8 @@ class PesertaController extends Controller
             if ($request->hasFile("peserta.$index.foto_identitas")) {
                 $identitasPath = $request->file("peserta.$index.foto_identitas")->store('identitas', 'public');
             }
-            if ($request->hasFile("peserta.$index.paspor")) {
-                $pasporPath = $request->file("peserta.$index.paspor")->store('paspor', 'public');
+            if ($request->hasFile("peserta.$index.foto_paspor")) {
+                $pasporPath = $request->file("peserta.$index.foto_paspor")->store('paspor', 'public');
             }
 
             Peserta::create([
@@ -66,8 +66,7 @@ class PesertaController extends Controller
                 'telepon' => $data['telepon'],
                 'email' => $data['email'],
                 'foto_identitas' => $identitasPath,
-                'paspor' => $pasporPath,
-                'status_verifikasi' => 'belum',
+                'foto_paspor' => $pasporPath,
             ]);
         }
 

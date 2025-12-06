@@ -38,7 +38,8 @@ class PaketTourController extends Controller
             'harga_per_peserta' => 'required|numeric',
             'jadwal_keberangkatan' => 'required|date',
             'kuota' => 'required|integer|min:1',
-            'durasi' => 'required|integer|min:1',
+            'lama_hari' => 'required|integer|min:0',
+            'lama_malam' => 'required|integer|min:0',
             'wajib_paspor' => 'nullable|in:on,off,1,0,true,false',
             'wajib_identitas' => 'nullable|in:on,off,1,0,true,false',
             'tampil_di_katalog' => 'nullable|in:on,off,1,0,true,false',
@@ -51,7 +52,8 @@ class PaketTourController extends Controller
             'harga_per_peserta',
             'jadwal_keberangkatan',
             'kuota',
-            'durasi',
+            'lama_hari',
+            'lama_malam',
         ]);
 
         $data['wajib_paspor'] = $request->boolean('wajib_paspor');
@@ -90,7 +92,8 @@ class PaketTourController extends Controller
             'harga_per_peserta' => 'required|numeric',
             'jadwal_keberangkatan' => 'required|date',
             'kuota' => 'required|integer|min:1',
-            'durasi' => 'required|integer|min:1',
+            'lama_hari' => 'required|integer|min:0',
+            'lama_malam' => 'required|integer|min:0',
             'wajib_paspor' => 'nullable|in:on,off,1,0,true,false',
             'wajib_identitas' => 'nullable|in:on,off,1,0,true,false',
             'tampil_di_katalog' => 'nullable|in:on,off,1,0,true,false',
@@ -103,7 +106,8 @@ class PaketTourController extends Controller
             'harga_per_peserta',
             'jadwal_keberangkatan',
             'kuota',
-            'durasi',
+            'lama_hari',
+            'lama_malam',
         ]);
 
         $data['wajib_paspor'] = $request->boolean('wajib_paspor');

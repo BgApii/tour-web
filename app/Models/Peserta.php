@@ -13,9 +13,12 @@ class Peserta extends Model
         'telepon',
         'email',
         'foto_identitas',
-        'paspor',
-        'status_verifikasi',
+        'foto_paspor',
     ];
+
+    public $timestamps = false;
+
+    public const UPDATED_AT = null;
 
     public function pesanan()
     {

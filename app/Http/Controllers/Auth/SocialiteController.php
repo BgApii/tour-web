@@ -33,7 +33,6 @@ class SocialiteController extends Controller
                 'name' => $googleUser->getName() ?? $googleUser->getNickname() ?? 'Pengguna',
                 'password' => Str::random(40),
                 'role' => 'customer',
-                'email_verified_at' => now(),
             ]
         );
 

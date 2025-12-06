@@ -19,9 +19,8 @@ return new class extends Migration
             $table->string('telepon');
             $table->string('email');
             $table->string('foto_identitas')->nullable();
-            $table->string('paspor')->nullable();
-            $table->enum('status_verifikasi', ['belum', 'diverifikasi', 'ditolak'])->default('belum');
-            $table->timestamps();
+            $table->string('foto_paspor')->nullable();
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

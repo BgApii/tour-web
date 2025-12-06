@@ -3,54 +3,46 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Peserta;
 use App\Models\Pesanan;
 use Illuminate\Http\Request;
 
 class PesertaController extends Controller
 {
-    public function verify(Peserta $peserta)
+    public function verify(Pesanan $pesanan)
     {
-        $peserta->update([
-            'status_verifikasi' => 'diverifikasi'
+        $pesanan->update([
+            'status_pesanan' => 'menunggu_pembayaran',
+            'alasan_penolakan' => null,
         ]);
-
-        // jika semua peserta diverifikasi → ubah status pesanan
-        $pesanan = $peserta->pesanan;
-        $total = $pesanan->pesertas()->count();
-        $verified = $pesanan->pesertas()->where('status_verifikasi', 'diverifikasi')->count();
-
-        if ($total == $verified) {
-            $pesanan->update([
-                'status_pesanan' => 'menunggu_pembayaran'
-            ]);
-        }
 
         if (request()->expectsJson()) {
             return response()->json([
-                'message' => 'Peserta berhasil diverifikasi',
-                'data' => $peserta->fresh(),
+                'message' => 'Pesanan diverifikasi',
                 'pesanan' => $pesanan->fresh('pesertas'),
             ]);
         }
 
-        return back()->with('success', 'Peserta berhasil diverifikasi');
+        return back()->with('success', 'Pesanan diverifikasi');
     }
 
-    public function reject(Peserta $peserta)
+    public function reject(Request $request, Pesanan $pesanan)
     {
-        $peserta->update([
-            'status_verifikasi' => 'ditolak'
+        $validated = $request->validate([
+            'alasan_penolakan' => 'required|string',
         ]);
 
-        // status pesanan tetap menunggu verifikasi
+        $pesanan->update([
+            'status_pesanan' => 'pesanan_ditolak',
+            'alasan_penolakan' => $validated['alasan_penolakan'],
+        ]);
+
         if (request()->expectsJson()) {
             return response()->json([
-                'message' => 'Peserta ditolak. Customer diminta upload ulang.',
-                'data' => $peserta->fresh(),
-            ], 422);
+                'message' => 'Pesanan ditolak',
+                'pesanan' => $pesanan->fresh('pesertas'),
+            ]);
         }
 
-        return back()->with('error', 'Peserta ditolak. Customer diminta upload ulang.');
+        return back()->with('error', 'Pesanan ditolak');
     }
 }

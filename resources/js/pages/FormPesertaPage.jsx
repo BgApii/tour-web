@@ -23,7 +23,7 @@ const FormPesertaPage = () => {
                 telepon: pesananData.pesertas?.[idx]?.telepon ?? '',
                 email: pesananData.pesertas?.[idx]?.email ?? '',
                 foto_identitas: null,
-                paspor: null,
+                foto_paspor: null,
             }));
             setPeserta(initial);
         }
@@ -145,7 +145,7 @@ const FormPesertaPage = () => {
                                         type="file"
                                         accept="image/*"
                                         required
-                                        onChange={(e) => updateField(idx, 'paspor', e.target.files?.[0] ?? null)}
+                                        onChange={(e) => updateField(idx, 'foto_paspor', e.target.files?.[0] ?? null)}
                                         className="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 bg-white"
                                     />
                                 </div>

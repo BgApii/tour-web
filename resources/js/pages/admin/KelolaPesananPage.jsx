@@ -24,8 +24,8 @@ export default function KelolaPesananPage() {
         (pesanan ?? []).forEach((order) => {
             const paketId = order.paket_tour?.id;
             if (!paketId || !paketMap.has(paketId)) return;
-            const verified = (order.pesertas ?? []).filter((p) => p.status_verifikasi === 'diverifikasi').length;
-            paketMap.get(paketId).totalTerverifikasi += verified;
+            const totalPeserta = (order.pesertas ?? []).length;
+            paketMap.get(paketId).totalTerverifikasi += totalPeserta;
         });
 
         return Array.from(paketMap.values());

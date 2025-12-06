@@ -76,12 +76,14 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
 
     Route::get('/pesanan/{pesanan}/peserta', [PesertaController::class, 'create']);
     Route::post('/pesanan/{pesanan}/peserta', [PesertaController::class, 'store']);
+    Route::post('/pesanan/{pesanan}/selesai', [PesananController::class, 'markSelesai']);
 
     Route::post('/paket/{paketTour}/rating', [RatingController::class, 'store'])
         ->name('rating.store');
 
     Route::post('/payments/{pesanan}/snap-token', [PaymentController::class, 'createSnapToken']);
     Route::post('/payments/{pesanan}/confirm', [PaymentController::class, 'confirm']);
+    Route::get('/payments/{pesanan}/status', [PaymentController::class, 'status']);
 });
 
 
@@ -109,10 +111,10 @@ Route::middleware(['auth','role:admin'])
         Route::get('/pesanan/{pesanan}', [PesananControllerAdmin::class, 'show'])->name('pesanan.show');
 
         // verifikasi peserta
-        Route::put('/peserta/{peserta}/verify', [PesertaControllerAdmin::class, 'verify'])
-            ->name('peserta.verify');
-        Route::put('/peserta/{peserta}/reject', [PesertaControllerAdmin::class, 'reject'])
-            ->name('peserta.reject');
+        Route::put('/pesanan/{pesanan}/verify', [PesertaControllerAdmin::class, 'verify'])
+            ->name('pesanan.verify');
+        Route::put('/pesanan/{pesanan}/reject', [PesertaControllerAdmin::class, 'reject'])
+            ->name('pesanan.reject');
     });
 
 

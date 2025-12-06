@@ -20,7 +20,8 @@ return new class extends Migration
             $table->decimal('harga_per_peserta', 12, 2);
             $table->date('jadwal_keberangkatan');
             $table->integer('kuota');
-            $table->integer('durasi');
+            $table->integer('lama_hari');
+            $table->integer('lama_malam');
             $table->boolean('wajib_paspor')->default(false);
             $table->boolean('wajib_identitas')->default(true);
             $table->boolean('tampil_di_katalog')->default(true);

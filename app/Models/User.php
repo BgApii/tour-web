@@ -21,8 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role',
-        'phone'
+        'role'
     ];
 
     /**
@@ -43,7 +42,6 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
@@ -51,6 +49,11 @@ class User extends Authenticatable
     public function pesanans()
     {
         return $this->hasMany(Pesanan::class);
+    }
+
+    public function pembayarans()
+    {
+        return $this->hasMany(Pembayaran::class, 'user_id');
     }
 
     public function ratings()

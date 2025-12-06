@@ -20,8 +20,10 @@ return new class extends Migration
                 'menunggu_verifikasi',
                 'menunggu_pembayaran',
                 'pembayaran_selesai',
-                'pesanan_selesai'
+                'pesanan_selesai',
+                'pesanan_ditolak'
             ])->default('menunggu_verifikasi');
+            $table->text('alasan_penolakan')->nullable();
             $table->timestamp('tanggal_pemesanan')->useCurrent();
             $table->timestamps();
         });

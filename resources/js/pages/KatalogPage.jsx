@@ -89,8 +89,8 @@ const KatalogPage = () => {
                                     </span>
                                     <span className="px-3 py-1 rounded-full bg-slate-50 border border-slate-200">
                                         Durasi:{" "}
-                                        {item.durasi
-                                            ? `${item.durasi} hari`
+                                        {item.lama_hari && item.lama_malam
+                                            ? `${item.lama_hari} Hari/${item.lama_malam} Malam`
                                             : "-"}
                                     </span>
                                     {item.wajib_paspor && (

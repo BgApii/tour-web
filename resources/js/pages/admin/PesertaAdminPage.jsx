@@ -7,25 +7,8 @@ export default function PesertaAdminPage() {
     const { id } = useParams();
     const { data: pesanan, loading, error, refetch } = useFetch(`/admin/pesanan/${id}`);
     const [processing, setProcessing] = useState(false);
-    const [filter, setFilter] = useState('all');
-
-    const updateStatus = async (pesertaId, action) => {
-        setProcessing(true);
-        try {
-            await api.put(`/admin/peserta/${pesertaId}/${action}`);
-            refetch();
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setProcessing(false);
-        }
-    };
-
-    const filteredPeserta = (pesanan?.pesertas ?? []).filter((p) => {
-        if (filter === 'verified') return p.status_verifikasi === 'diverifikasi';
-        if (filter === 'unverified') return p.status_verifikasi !== 'diverifikasi';
-        return true;
-    });
+    const [alasan, setAlasan] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
     const buildStorageUrl = (path) => {
         if (!path) return null;
@@ -49,49 +32,85 @@ export default function PesertaAdminPage() {
         );
     };
 
+    const verifyPesanan = async () => {
+        setProcessing(true);
+        setErrorMessage('');
+        try {
+            await api.put(`/admin/pesanan/${id}/verify`);
+            refetch();
+        } catch (err) {
+            setErrorMessage(err.response?.data?.message || 'Gagal memverifikasi pesanan');
+        } finally {
+            setProcessing(false);
+        }
+    };
+
+    const rejectPesanan = async () => {
+        if (!alasan.trim()) {
+            setErrorMessage('Alasan penolakan wajib diisi');
+            return;
+        }
+        setProcessing(true);
+        setErrorMessage('');
+        try {
+            await api.put(`/admin/pesanan/${id}/reject`, { alasan_penolakan: alasan });
+            refetch();
+        } catch (err) {
+            setErrorMessage(err.response?.data?.message || 'Gagal menolak pesanan');
+        } finally {
+            setProcessing(false);
+        }
+    };
+
     if (loading) return <p className="text-slate-600">Memuat peserta...</p>;
     if (error) return <p className="text-red-600">Gagal memuat data</p>;
+
+    const pesertaList = pesanan?.pesertas ?? [];
 
     return (
         <div className="space-y-6">
             <div>
                 <p className="text-sm uppercase tracking-[0.2em] text-indigo-600 font-semibold">Halaman Data Peserta</p>
                 <h1 className="text-3xl font-bold text-slate-900">Pesanan #{pesanan?.id}</h1>
-                <p className="text-slate-600">Verifikasi identitas peserta.</p>
+                <p className="text-slate-600">Verifikasi identitas peserta per pesanan.</p>
+                {pesanan?.alasan_penolakan && (
+                    <div className="mt-3 text-sm text-red-700 bg-red-50 border border-red-100 rounded-xl px-4 py-3">
+                        Alasan penolakan: {pesanan.alasan_penolakan}
+                    </div>
+                )}
             </div>
 
             <div className="bg-white border border-slate-200 rounded-2xl shadow overflow-hidden">
-                <div className="flex items-center gap-2 px-6 py-4 border-b border-slate-200 bg-slate-50">
-                    <button
-                        className={`px-3 py-2 text-sm font-semibold rounded-lg ${
-                            filter === 'all' ? 'bg-indigo-600 text-white' : 'text-slate-700 bg-white border border-slate-200'
-                        }`}
-                        onClick={() => setFilter('all')}
-                    >
-                        Semua ({(pesanan?.pesertas ?? []).length})
-                    </button>
-                    <button
-                        className={`px-3 py-2 text-sm font-semibold rounded-lg ${
-                            filter === 'unverified'
-                                ? 'bg-indigo-600 text-white'
-                                : 'text-slate-700 bg-white border border-slate-200'
-                        }`}
-                        onClick={() => setFilter('unverified')}
-                    >
-                        Belum diverifikasi (
-                        {(pesanan?.pesertas ?? []).filter((p) => p.status_verifikasi !== 'diverifikasi').length})
-                    </button>
-                    <button
-                        className={`px-3 py-2 text-sm font-semibold rounded-lg ${
-                            filter === 'verified'
-                                ? 'bg-indigo-600 text-white'
-                                : 'text-slate-700 bg-white border border-slate-200'
-                        }`}
-                        onClick={() => setFilter('verified')}
-                    >
-                        Diverifikasi ({(pesanan?.pesertas ?? []).filter((p) => p.status_verifikasi === 'diverifikasi').length})
-                    </button>
+                <div className="px-6 py-4 border-b border-slate-200 bg-slate-50 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                    <div className="flex gap-2">
+                        <button
+                            onClick={verifyPesanan}
+                            disabled={processing}
+                            className="px-4 py-2 text-sm font-semibold text-emerald-700 bg-emerald-50 rounded-lg hover:bg-emerald-100 disabled:opacity-60"
+                        >
+                            Verifikasi Pesanan
+                        </button>
+                        <button
+                            onClick={rejectPesanan}
+                            disabled={processing}
+                            className="px-4 py-2 text-sm font-semibold text-red-700 bg-red-50 rounded-lg hover:bg-red-100 disabled:opacity-60"
+                        >
+                            Tolak Pesanan
+                        </button>
+                    </div>
+                    <div className="flex-1">
+                        <textarea
+                            className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm"
+                            placeholder="Isi alasan penolakan jika pesanan ditolak"
+                            value={alasan}
+                            onChange={(e) => setAlasan(e.target.value)}
+                        />
+                    </div>
                 </div>
+
+                {errorMessage && (
+                    <div className="px-6 py-3 text-sm text-red-700 bg-red-50 border-b border-red-100">{errorMessage}</div>
+                )}
 
                 <table className="min-w-full divide-y divide-slate-200">
                     <thead className="bg-slate-50 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">
@@ -101,13 +120,11 @@ export default function PesertaAdminPage() {
                             <th className="px-6 py-3">Email</th>
                             <th className="px-6 py-3">Alamat</th>
                             <th className="px-6 py-3">Foto Identitas</th>
-                            <th className="px-6 py-3">Paspor</th>
-                            <th className="px-6 py-3">Status</th>
-                            <th className="px-6 py-3 text-right">Aksi</th>
+                            <th className="px-6 py-3">Foto Paspor</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
-                        {filteredPeserta.map((p) => (
+                        {pesertaList.map((p) => (
                             <tr key={p.id} className="hover:bg-slate-50/80">
                                 <td className="px-6 py-4">
                                     <p className="font-semibold text-slate-900">{p.nama_lengkap}</p>
@@ -116,36 +133,13 @@ export default function PesertaAdminPage() {
                                 <td className="px-6 py-4 text-sm text-slate-700">{p.email ?? '-'}</td>
                                 <td className="px-6 py-4 text-sm text-slate-700">{p.alamat ?? '-'}</td>
                                 <td className="px-6 py-4">{renderDokumenLink('Lihat Foto', p.foto_identitas)}</td>
-                                <td className="px-6 py-4">{renderDokumenLink('Lihat Paspor', p.paspor)}</td>
-                                <td className="px-6 py-4">
-                                    <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold">
-                                        {p.status_verifikasi}
-                                    </span>
-                                </td>
-                                <td className="px-6 py-4 text-right">
-                                    <div className="flex items-center justify-end gap-2">
-                                        <button
-                                            onClick={() => updateStatus(p.id, 'verify')}
-                                            disabled={processing}
-                                            className="px-3 py-2 text-sm font-semibold text-emerald-700 bg-emerald-50 rounded-lg hover:bg-emerald-100"
-                                        >
-                                            Verifikasi
-                                        </button>
-                                        <button
-                                            onClick={() => updateStatus(p.id, 'reject')}
-                                            disabled={processing}
-                                            className="px-3 py-2 text-sm font-semibold text-red-700 bg-red-50 rounded-lg hover:bg-red-100"
-                                        >
-                                            Tolak
-                                        </button>
-                                    </div>
-                                </td>
+                                <td className="px-6 py-4">{renderDokumenLink('Lihat Paspor', p.foto_paspor)}</td>
                             </tr>
                         ))}
-                        {filteredPeserta.length === 0 && (
+                        {pesertaList.length === 0 && (
                             <tr>
-                                <td className="px-6 py-6 text-center text-slate-500" colSpan={8}>
-                                    Tidak ada peserta pada filter ini.
+                                <td className="px-6 py-6 text-center text-slate-500" colSpan={6}>
+                                    Tidak ada peserta pada pesanan ini.
                                 </td>
                             </tr>
                         )}
