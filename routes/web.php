@@ -30,6 +30,7 @@ Route::get('/', [PaketTourController::class, 'index']);
 Route::get('/paket/{paketTour}', [PaketTourController::class, 'show']);
 Route::get('/api/paket', [PaketTourController::class, 'index']);
 Route::get('/api/paket/{paketTour}', [PaketTourController::class, 'show']);
+Route::get('/api/ratings', [PaketTourController::class, 'ratings']);
 
 // -----------------------------------------------------
 // SOCIAL AUTH (GOOGLE)

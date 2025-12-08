@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import api from '../lib/api';
 import useFetch from '../hooks/useFetch';
 
 export default function RatingPage() {
     const { id } = useParams();
     const { data: paket } = useFetch(`/api/paket/${id}`);
+    const navigate = useNavigate();
     const [nilai, setNilai] = useState(5);
     const [ulasan, setUlasan] = useState('');
     const [message, setMessage] = useState(null);
@@ -23,8 +24,14 @@ export default function RatingPage() {
                 ulasan,
             });
             setMessage(response.data.message ?? 'Rating tersimpan');
+            navigate('/pesanan-saya?status=pesanan_selesai');
         } catch (err) {
-            setError(err.response?.data?.message || 'Gagal menyimpan rating');
+            const status = err.response?.status;
+            const msg = err.response?.data?.message || 'Gagal menyimpan rating';
+            setError(msg);
+            if (status === 409) {
+                navigate('/pesanan-saya?status=pesanan_selesai');
+            }
         } finally {
             setSaving(false);
         }

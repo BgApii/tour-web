@@ -10,13 +10,26 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 
+/**
+ * Controller untuk autentikasi menggunakan Google Socialite.
+ */
 class SocialiteController extends Controller
 {
+    /**
+     * Redirect ke halaman otorisasi Google.
+     *
+     * @return RedirectResponse
+     */
     public function redirect(): RedirectResponse
     {
         return Socialite::driver('google')->redirect();
     }
 
+    /**
+     * Menangani callback Google dan login/registrasi pengguna.
+     *
+     * @return RedirectResponse
+     */
     public function callback(): RedirectResponse
     {
         try {

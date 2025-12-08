@@ -6,6 +6,7 @@ import { useAuth } from "../providers/AuthProvider";
 
 const KatalogPage = () => {
     const { data: paket, loading, error } = useFetch("/api/paket");
+    const { data: ratings, loading: loadingRatings, error: errorRatings } = useFetch("/api/ratings");
     const { user } = useAuth();
     const navigate = useNavigate();
 
@@ -117,6 +118,62 @@ const KatalogPage = () => {
                         </div>
                     );
                 })}
+            </div>
+
+            <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <p className="text-sm uppercase tracking-[0.2em] text-indigo-600 font-semibold">
+                            Ulasan Peserta
+                        </p>
+                        <h2 className="text-2xl font-bold text-slate-900">Apa kata mereka?</h2>
+                    </div>
+                    <span className="text-xs text-slate-500 border border-slate-200 rounded-full px-3 py-1">
+                        Geser untuk melihat rating lain
+                    </span>
+                </div>
+                {loadingRatings && <p className="text-slate-600">Memuat rating...</p>}
+                {errorRatings && <p className="text-red-600">Gagal memuat rating</p>}
+                <div className="flex gap-4 overflow-x-auto pb-3 snap-x snap-mandatory">
+                    {(ratings ?? []).map((rating) => {
+                        const banner = rating.paket?.banner_url;
+                        return (
+                            <div
+                                key={rating.id}
+                                className="min-w-[260px] max-w-sm bg-white border border-slate-200 rounded-2xl shadow-sm snap-start"
+                            >
+                                <div className="h-28 bg-gradient-to-br from-indigo-100 to-indigo-200 rounded-t-2xl relative overflow-hidden">
+                                    {banner && (
+                                        <img
+                                            src={banner}
+                                            alt={rating.paket?.nama_paket}
+                                            className="absolute inset-0 h-full w-full object-cover"
+                                            loading="lazy"
+                                        />
+                                    )}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                                    <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white text-sm">
+                                        <span className="font-semibold truncate">
+                                            {rating.paket?.nama_paket ?? "Paket"}
+                                        </span>
+                                        <span className="px-3 py-1 rounded-full bg-white/20 backdrop-blur text-xs">
+                                            {rating.nilai_rating}/5
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="p-4 space-y-2">
+                                    <p className="text-sm text-slate-700 overflow-hidden text-ellipsis">
+                                        {rating.ulasan || "Tanpa ulasan tertulis"}
+                                    </p>
+                                    <p className="text-xs text-slate-500">oleh {rating.user?.name ?? "Pengguna"}</p>
+                                </div>
+                            </div>
+                        );
+                    })}
+                    {!loadingRatings && (ratings ?? []).length === 0 && (
+                        <div className="text-slate-500 text-sm">Belum ada rating yang ditampilkan.</div>
+                    )}
+                </div>
             </div>
         </div>
     );

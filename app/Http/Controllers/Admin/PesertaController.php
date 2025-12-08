@@ -6,8 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Models\Pesanan;
 use Illuminate\Http\Request;
 
+/**
+ * Controller admin untuk memverifikasi atau menolak peserta pada pesanan.
+ */
 class PesertaController extends Controller
 {
+    /**
+     * Menandai pesanan telah diverifikasi oleh admin.
+     *
+     * @param Pesanan $pesanan
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
     public function verify(Pesanan $pesanan)
     {
         $pesanan->update([
@@ -25,6 +34,13 @@ class PesertaController extends Controller
         return back()->with('success', 'Pesanan diverifikasi');
     }
 
+    /**
+     * Menolak pesanan dan menyimpan alasan penolakan.
+     *
+     * @param Request $request
+     * @param Pesanan $pesanan
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
     public function reject(Request $request, Pesanan $pesanan)
     {
         $validated = $request->validate([

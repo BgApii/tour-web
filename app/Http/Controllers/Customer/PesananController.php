@@ -7,12 +7,21 @@ use Illuminate\Http\Request;
 use App\Models\Pesanan;
 use App\Models\PaketTour;
 
+/**
+ * Controller pelanggan untuk membuat dan melihat pesanan.
+ */
 class PesananController extends Controller
 {
+    /**
+     * Menampilkan daftar pesanan milik pengguna.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
+     */
     public function index(Request $request)
     {
         $pesanan = Pesanan::where('user_id', auth()->id())
-            ->with('paketTour', 'pesertas')
+            ->with('paketTour', 'pesertas', 'rating')
             ->latest()
             ->get();
 
@@ -23,6 +32,13 @@ class PesananController extends Controller
         return view('app');
     }
 
+    /**
+     * Membuat pesanan baru untuk paket tour tertentu.
+     *
+     * @param Request $request
+     * @param PaketTour|null $paketTour
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request, PaketTour $paketTour = null)
     {
         $request->validate([
@@ -48,6 +64,13 @@ class PesananController extends Controller
         return redirect('/pesanan-saya');
     }
 
+    /**
+     * Menandai pesanan selesai oleh pelanggan.
+     *
+     * @param Request $request
+     * @param Pesanan $pesanan
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
     public function markSelesai(Request $request, Pesanan $pesanan)
     {
         if ($pesanan->user_id !== $request->user()->id) {

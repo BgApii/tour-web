@@ -6,8 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Models\Pesanan;
 use Illuminate\Http\Request;
 
+/**
+ * Controller pemilik untuk melihat rekapitulasi pesanan selesai.
+ */
 class RekapitulasiController extends Controller
 {
+    /**
+     * Menampilkan rekap pesanan selesai berdasarkan filter bulan/tahun.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
+     */
     public function index(Request $request)
     {
         $query = Pesanan::with(['paketTour', 'user'])

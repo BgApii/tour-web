@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import api from '../lib/api';
 import useFetch from '../hooks/useFetch';
 
@@ -21,9 +21,19 @@ const FILTERS = [
 
 export default function PesananSayaPage() {
     const { data: pesanan, loading, error, refetch } = useFetch('/pesanan-saya');
-    const [filter, setFilter] = useState('menunggu_verifikasi');
+    const { search } = useLocation();
+    const queryStatus = useMemo(() => new URLSearchParams(search).get('status'), [search]);
+    const [filter, setFilter] = useState(() => {
+        return FILTERS.some((f) => f.value === queryStatus) ? queryStatus : 'menunggu_verifikasi';
+    });
     const [completing, setCompleting] = useState(null);
     const [actionError, setActionError] = useState('');
+
+    useEffect(() => {
+        if (FILTERS.some((f) => f.value === queryStatus)) {
+            setFilter(queryStatus);
+        }
+    }, [queryStatus]);
 
     const filteredOrders = useMemo(() => {
         return (pesanan ?? []).filter((order) => order.status_pesanan === filter);
@@ -144,13 +154,17 @@ export default function PesananSayaPage() {
 
                             {filter === 'pesanan_selesai' && (
                                 <div className="border border-slate-200 rounded-xl p-4 bg-slate-50">
-                                    <p className="text-sm text-slate-600 mb-2">Berikan ulasan perjalananmu.</p>
-                                    <Link
-                                        to={`/paket/${order.paket_id}/rating`}
-                                        className="inline-flex px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700"
-                                    >
-                                        Beri Rating
-                                    </Link>
+                                    <p className="text-sm text-slate-600 mb-2">
+                                        {order.rating ? 'Rating sudah dikirim.' : 'Berikan ulasan perjalananmu.'}
+                                    </p>
+                                    {!order.rating && (
+                                        <Link
+                                            to={`/paket/${order.paket_id}/rating`}
+                                            className="inline-flex px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700"
+                                        >
+                                            Beri Rating
+                                        </Link>
+                                    )}
                                 </div>
                             )}
 

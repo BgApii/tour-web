@@ -4,9 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\PaketTour;
+use App\Models\Rating;
 
+/**
+ * Controller untuk katalog paket tour publik.
+ */
 class PaketTourController extends Controller
 {
+    /**
+     * Menampilkan daftar paket tour aktif.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
     public function index(Request $request)
     {
         if (auth()->check() && in_array(auth()->user()->role, ['admin', 'owner'], true) && ! $request->expectsJson()) {
@@ -23,6 +33,47 @@ class PaketTourController extends Controller
         return view('app');
     }
 
+    /**
+     * Mengambil daftar rating terbaru untuk ditampilkan di katalog.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function ratings()
+    {
+        $ratings = Rating::with([
+            'paketTour:id,nama_paket,banner',
+            'user:id,name',
+        ])
+            ->orderByDesc('created_at')
+            ->take(12)
+            ->get()
+            ->map(function ($rating) {
+                return [
+                    'id' => $rating->id,
+                    'nilai_rating' => $rating->nilai_rating,
+                    'ulasan' => $rating->ulasan,
+                    'paket' => [
+                        'id' => $rating->paketTour?->id,
+                        'nama_paket' => $rating->paketTour?->nama_paket,
+                        'banner_url' => $rating->paketTour?->banner_url,
+                    ],
+                    'user' => [
+                        'name' => $rating->user?->name ?? 'Pengguna',
+                    ],
+                    'created_at' => $rating->created_at,
+                ];
+            });
+
+        return response()->json(['data' => $ratings]);
+    }
+
+    /**
+     * Menampilkan detail satu paket tour.
+     *
+     * @param Request $request
+     * @param PaketTour $paketTour
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
     public function show(Request $request, PaketTour $paketTour)
     {
         if (auth()->check() && in_array(auth()->user()->role, ['admin', 'owner'], true) && ! $request->expectsJson()) {

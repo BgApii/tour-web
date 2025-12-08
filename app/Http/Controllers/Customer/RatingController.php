@@ -7,8 +7,18 @@ use App\Models\Rating;
 use App\Models\PaketTour;
 use Illuminate\Http\Request;
 
+/**
+ * Controller pelanggan untuk memberi rating dan ulasan pada paket tour.
+ */
 class RatingController extends Controller
 {
+    /**
+     * Membuat atau memperbarui rating dan ulasan pengguna untuk paket.
+     *
+     * @param Request $request
+     * @param PaketTour $paketTour
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request, PaketTour $paketTour)
     {
         $request->validate([
@@ -16,7 +26,23 @@ class RatingController extends Controller
             'ulasan' => 'nullable|string'
         ]);
 
-        Rating::updateOrCreate(
+        $existing = Rating::where('user_id', auth()->id())
+            ->where('paket_id', $paketTour->id)
+            ->first();
+
+        if ($existing) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Rating sudah pernah diberikan',
+                    'data' => $existing,
+                ], 409);
+            }
+
+            return redirect('/pesanan-saya?status=pesanan_selesai')
+                ->with('info', 'Rating sudah pernah diberikan untuk paket ini');
+        }
+
+        $rating = Rating::updateOrCreate(
             [
                 'user_id' => auth()->id(),
                 'paket_id' => $paketTour->id
@@ -34,6 +60,7 @@ class RatingController extends Controller
             ]);
         }
 
-        return back()->with('success', 'Terima kasih atas ulasan Anda!');
+        return redirect('/pesanan-saya?status=pesanan_selesai')
+            ->with('success', 'Terima kasih atas ulasan Anda!');
     }
 }

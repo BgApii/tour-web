@@ -9,8 +9,16 @@ use Midtrans\Snap;
 use Midtrans\Transaction;
 use Midtrans\CoreApi;
 
+/**
+ * Controller untuk menangani alur pembayaran Midtrans.
+ */
 class PaymentController extends Controller
 {
+    /**
+     * Menyetel konfigurasi Midtrans secara global.
+     *
+     * @return void
+     */
     protected function bootMidtrans(): void
     {
         MidtransConfig::$serverKey = config('services.midtrans.server_key');
@@ -19,6 +27,13 @@ class PaymentController extends Controller
         MidtransConfig::$is3ds = true;
     }
 
+    /**
+     * Membuat Snap token atau charge VA langsung untuk pesanan.
+     *
+     * @param Request $request
+     * @param Pesanan $pesanan
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function createSnapToken(Request $request, Pesanan $pesanan)
     {
         $user = $request->user();
@@ -113,6 +128,13 @@ class PaymentController extends Controller
         ]);
     }
 
+    /**
+     * Mengonfirmasi status pembayaran secara manual.
+     *
+     * @param Request $request
+     * @param Pesanan $pesanan
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function confirm(Request $request, Pesanan $pesanan)
     {
         $user = $request->user();
@@ -139,6 +161,13 @@ class PaymentController extends Controller
         ]);
     }
 
+    /**
+     * Mengecek status transaksi ke Midtrans dan memperbarui pesanan.
+     *
+     * @param Request $request
+     * @param Pesanan $pesanan
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function status(Request $request, Pesanan $pesanan)
     {
         $orderId = $request->input('order_id');

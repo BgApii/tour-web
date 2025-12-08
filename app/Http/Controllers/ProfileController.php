@@ -10,10 +10,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
+/**
+ * Controller untuk profil pengguna (lihat, perbarui, hapus akun).
+ */
 class ProfileController extends Controller
 {
     /**
      * Display the user's profile form.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|View
      */
     public function edit(Request $request)
     {
@@ -26,6 +32,9 @@ class ProfileController extends Controller
 
     /**
      * Update the user's profile information.
+     *
+     * @param ProfileUpdateRequest $request
+     * @return \Illuminate\Http\JsonResponse|RedirectResponse
      */
     public function update(ProfileUpdateRequest $request)
     {
@@ -45,6 +54,9 @@ class ProfileController extends Controller
 
     /**
      * Delete the user's account.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|RedirectResponse
      */
     public function destroy(Request $request)
     {

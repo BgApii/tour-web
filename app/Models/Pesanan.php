@@ -34,4 +34,13 @@ class Pesanan extends Model
     {
         return $this->hasMany(Pembayaran::class, 'id_pesanan');
     }
+
+    /**
+     * Rating yang diberikan pengguna pada paket ini (jika ada).
+     */
+    public function rating()
+    {
+        return $this->hasOne(Rating::class, 'paket_id', 'paket_id')
+            ->where('user_id', $this->user_id);
+    }
 }

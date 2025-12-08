@@ -6,8 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Models\PaketTour;
 use Illuminate\Http\Request;
 
+/**
+ * Controller untuk mengelola CRUD paket tour di area admin.
+ */
 class PaketTourController extends Controller
 {
+    /**
+     * Menampilkan daftar paket tour.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
+     */
     public function index(Request $request)
     {
         $paket = PaketTour::all();
@@ -19,6 +28,12 @@ class PaketTourController extends Controller
         return view('app');
     }
 
+    /**
+     * Menampilkan form create atau respon JSON siap pakai.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
+     */
     public function create(Request $request)
     {
         if ($request->expectsJson()) {
@@ -28,6 +43,12 @@ class PaketTourController extends Controller
         return view('app');
     }
 
+    /**
+     * Menyimpan paket tour baru dari request.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -73,6 +94,13 @@ class PaketTourController extends Controller
         return redirect()->route('admin.paket.index');
     }
 
+    /**
+     * Menampilkan data paket untuk diedit.
+     *
+     * @param Request $request
+     * @param PaketTour $paketTour
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
+     */
     public function edit(Request $request, PaketTour $paketTour)
     {
         if ($request->expectsJson()) {
@@ -82,6 +110,13 @@ class PaketTourController extends Controller
         return view('app');
     }
 
+    /**
+     * Memperbarui data paket tour.
+     *
+     * @param Request $request
+     * @param PaketTour $paketTour
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
     public function update(Request $request, PaketTour $paketTour)
     {
         $request->validate([
@@ -130,6 +165,12 @@ class PaketTourController extends Controller
         return redirect()->route('admin.paket.index');
     }
 
+    /**
+     * Menghapus paket tour.
+     *
+     * @param PaketTour $paketTour
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
     public function destroy(PaketTour $paketTour)
     {
         $paketTour->delete();
@@ -141,6 +182,12 @@ class PaketTourController extends Controller
         return redirect()->route('admin.paket.index');
     }
 
+    /**
+     * Menyembunyikan paket dari katalog.
+     *
+     * @param PaketTour $paketTour
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
     public function hide(PaketTour $paketTour)
     {
         $paketTour->update(['tampil_di_katalog' => false]);
@@ -152,6 +199,12 @@ class PaketTourController extends Controller
         return back();
     }
 
+    /**
+     * Menampilkan paket di katalog.
+     *
+     * @param PaketTour $paketTour
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
     public function showPaket(PaketTour $paketTour)
     {
         $paketTour->update(['tampil_di_katalog' => true]);

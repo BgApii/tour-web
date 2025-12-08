@@ -8,8 +8,18 @@ use App\Models\Pesanan;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
+/**
+ * Controller pelanggan untuk mengelola peserta dalam pesanan.
+ */
 class PesertaController extends Controller
 {
+    /**
+     * Menampilkan form/JSON untuk melengkapi data peserta.
+     *
+     * @param Request $request
+     * @param Pesanan $pesanan
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
+     */
     public function create(Request $request, Pesanan $pesanan)
     {
         $pesanan->load('paketTour', 'pesertas');
@@ -21,6 +31,13 @@ class PesertaController extends Controller
         return view('app');
     }
 
+    /**
+     * Menyimpan data peserta sesuai aturan paket tour.
+     *
+     * @param Request $request
+     * @param Pesanan $pesanan
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request, Pesanan $pesanan)
     {
         $wajibIdentitas = (bool) ($pesanan->paketTour->wajib_identitas ?? false);
