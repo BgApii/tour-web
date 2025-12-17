@@ -50,15 +50,11 @@ export default function PaketFormPage() {
         setError(null);
         try {
             const formData = new FormData();
-            const token = document.head.querySelector('meta[name="csrf-token"]')?.content;
             Object.entries(form).forEach(([key, value]) => {
                 if (value !== null && value !== undefined) {
                     formData.append(key, value);
                 }
             });
-            if (token) {
-                formData.append('_token', token);
-            }
             if (isEdit) {
                 formData.append('_method', 'PUT');
                 await api.post(`/admin/paket/${id}`, formData, {
