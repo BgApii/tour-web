@@ -154,11 +154,12 @@ const KatalogPage = () => {
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/15 to-transparent" />
                                     </div>
                                     <div className="flex-1 p-5 space-y-4">
-                                        <div className="space-y-1">
-                                            <h3 className="text-lg font-semibold text-slate-900 leading-tight mb-4">
-                                                {item.nama_paket}
-                                            </h3>
-                                        </div>
+                                        <Link
+                                            to={`/paket/${item.id}`}
+                                            className="block text-lg font-semibold text-slate-900 leading-tight mb-4 hover:text-purple-700 transition"
+                                        >
+                                            {item.nama_paket}
+                                        </Link>
                                         <div className="space-y-2 text-sm text-slate-700">
                                             <div className="flex items-start gap-2">
                                                 <span
@@ -318,11 +319,8 @@ const KatalogPage = () => {
 
             <section id="rating-section" className="space-y-8">
                 <div className="text-center space-y-3">
-                    <p className="text-base font-semibold text-purple-700">
-                        Rating
-                    </p>
                     <h2 className="text-3xl sm:text-4xl font-bold text-slate-900">
-                        Trusted By Our Customers
+                        Rating
                     </h2>
                     <p className="text-sm sm:text-base text-slate-600 max-w-3xl mx-auto leading-relaxed">
                         Dengarkan pengalaman para traveler setelah menjelajah
