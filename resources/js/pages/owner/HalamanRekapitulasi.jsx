@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import useFetch from '../../hooks/useFetch';
 
-export default function RekapitulasiPage() {
+export default function HalamanRekapitulasi() {
     const [draftFilters, setDraftFilters] = useState({ bulan: '', tahun: '' });
     const [appliedFilters, setAppliedFilters] = useState({ bulan: '', tahun: '' });
     const query = useMemo(() => {

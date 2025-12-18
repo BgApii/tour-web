@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import api from '../../lib/api';
 import useFetch from '../../hooks/useFetch';
 
-export default function PesertaAdminPage() {
+export default function HalamanDataPeserta() {
     const { id } = useParams();
     const { data: pesanan, loading, error, refetch } = useFetch(`/admin/pesanan/${id}`);
     const [processing, setProcessing] = useState(false);

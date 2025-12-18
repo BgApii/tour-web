@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '../lib/api';
 
-const ProfilePage = () => {
+const MenuProfil = () => {
     const [form, setForm] = useState({ name: '', email: '' });
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -162,4 +162,4 @@ const ProfilePage = () => {
     );
 };
 
-export default ProfilePage;
+export default MenuProfil;

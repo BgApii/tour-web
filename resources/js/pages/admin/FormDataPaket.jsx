@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import api from '../../lib/api';
 import useFetch from '../../hooks/useFetch';
 
-export default function PaketFormPage() {
+export default function FormDataPaket() {
     const { id } = useParams();
     const isEdit = Boolean(id);
     const navigate = useNavigate();

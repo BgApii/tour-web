@@ -19,7 +19,7 @@ const FILTERS = [
     { value: 'pesanan_ditolak', label: 'Pesanan Ditolak' },
 ];
 
-export default function PesananSayaPage() {
+export default function HalamanPesananSaya() {
     const { data: pesanan, loading, error, refetch } = useFetch('/pesanan-saya');
     const { search } = useLocation();
     const queryStatus = useMemo(() => new URLSearchParams(search).get('status'), [search]);

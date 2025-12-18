@@ -13,7 +13,7 @@ const formatHarga = (value) =>
         maximumFractionDigits: 0,
     })}`;
 
-const KatalogPage = () => {
+const HalamanKatalog = () => {
     const { data: paket, loading, error } = useFetch("/api/paket");
     const {
         data: ratings,
@@ -582,4 +582,4 @@ const KatalogPage = () => {
     );
 };
 
-export default KatalogPage;
+export default HalamanKatalog;

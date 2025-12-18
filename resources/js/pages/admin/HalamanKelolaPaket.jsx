@@ -4,7 +4,7 @@ import api from '../../lib/api';
 import useFetch from '../../hooks/useFetch';
 import { formatTanggalIndo } from '../../utils/date';
 
-export default function KelolaPaketPage() {
+export default function HalamanKelolaPaket() {
     const { data: paket, loading, error, refetch } = useFetch('/admin/paket');
     const [processing, setProcessing] = useState(false);
 

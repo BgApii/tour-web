@@ -12,12 +12,12 @@ use App\Models\Rating;
 class PaketTourController extends Controller
 {
     /**
-     * Menampilkan daftar paket tour aktif.
+     * Mengambil data paket tour aktif.
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
-    public function index(Request $request)
+    public function ambilDataPaket(Request $request)
     {
         if (auth()->check() && in_array(auth()->user()->role, ['admin', 'owner'], true) && ! $request->expectsJson()) {
             return redirect(auth()->user()->role === 'owner' ? '/owner/rekapitulasi' : '/admin/paket');
@@ -27,7 +27,10 @@ class PaketTourController extends Controller
         $paket = PaketTour::where('tampil_di_katalog', true)->get();
 
         if ($request->expectsJson()) {
-            return response()->json(['data' => $paket]);
+            return response()->json([
+                'message' => 'Data paket',
+                'data' => $paket,
+            ]);
         }
 
         return view('app');

@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import api from '../lib/api';
 import useFetch from '../hooks/useFetch';
 
-const FormPemesananPage = () => {
+const HalamanFormPemesanan = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { data: paket } = useFetch(`/api/paket/${id}`);
@@ -58,4 +58,4 @@ const FormPemesananPage = () => {
     );
 };
 
-export default FormPemesananPage;
+export default HalamanFormPemesanan;

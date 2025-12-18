@@ -16,7 +16,7 @@ const VA_METHODS = [
     { code: 'other', name: 'Bank Lain', color: '#475569' },
 ];
 
-export default function PaymentMethodPage() {
+export default function HalamanMetodePembayaran() {
     const { orderId } = useParams();
     const { data: pesanan, loading } = useFetch(`/pesanan/${orderId}/peserta`);
     const [error, setError] = useState(null);

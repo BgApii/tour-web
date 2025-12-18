@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import api from '../lib/api';
 import useFetch from '../hooks/useFetch';
 
-export default function RatingPage() {
+export default function FormPenilaian() {
     const { id } = useParams();
     const { data: pesanan, loading, error: loadError } = useFetch(`/pesanan/${id}/peserta`);
     const navigate = useNavigate();

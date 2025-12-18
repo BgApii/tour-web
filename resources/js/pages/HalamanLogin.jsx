@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../providers/AuthProvider';
 
-export default function LoginPage() {
+export default function HalamanLogin() {
     const { login } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();

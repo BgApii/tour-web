@@ -10,7 +10,7 @@ const BADGES = {
     pesanan_selesai: 'bg-emerald-100 text-emerald-800 border-emerald-200',
 };
 
-export default function PesananPage() {
+export default function HalamanPesanan() {
     const { paketId } = useParams();
     const { state } = useLocation();
     const { data: pesanan, loading, error, refetch } = useFetch('/admin/pesanan');

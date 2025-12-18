@@ -2,44 +2,38 @@ import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout';
 import RequireRole from './components/RequireRole';
+import StatusScreen from './components/StatusScreen';
 import { AuthProvider } from './providers/AuthProvider';
 
-import KatalogPage from './pages/KatalogPage';
-import DetailPaketPage from './pages/DetailPaketPage';
-import LoginPage from './pages/LoginPage';
-import PesananSayaPage from './pages/PesananSayaPage';
-import FormPemesananPage from './pages/FormPemesananPage';
-import FormPesertaPage from './pages/FormPesertaPage';
-import PaymentMethodPage from './pages/PaymentMethodPage';
-import RatingPage from './pages/RatingPage';
-import ProfilePage from './pages/ProfilePage';
-import {
-    HalamanMenungguPembayaran,
-    HalamanPembayaranSelesai,
-    HalamanPesananSelesai,
-    HalamanStatusPembayaran,
-    HalamanStatusVerifikasi,
-} from './pages/StatusPages';
-import KelolaPaketPage from './pages/admin/KelolaPaketPage';
-import PaketFormPage from './pages/admin/PaketFormPage';
-import KelolaPesananPage from './pages/admin/KelolaPesananPage';
-import PesananPage from './pages/admin/PesananPage';
-import PesertaAdminPage from './pages/admin/PesertaAdminPage';
-import RekapitulasiPage from './pages/owner/RekapitulasiPage';
+import HalamanKatalog from './pages/HalamanKatalog';
+import HalamanDetail from './pages/HalamanDetail';
+import HalamanLogin from './pages/HalamanLogin';
+import HalamanPesananSaya from './pages/HalamanPesananSaya';
+import HalamanFormPemesanan from './pages/HalamanFormPemesanan';
+import FormPeserta from './pages/FormPeserta';
+import HalamanMetodePembayaran from './pages/HalamanMetodePembayaran';
+import FormPenilaian from './pages/FormPenilaian';
+import MenuProfil from './pages/MenuProfil';
+import HalamanKelolaPaket from './pages/admin/HalamanKelolaPaket';
+import FormDataPaket from './pages/admin/FormDataPaket';
+import HalamanKelolaPesanan from './pages/admin/HalamanKelolaPesanan';
+import HalamanPesanan from './pages/admin/HalamanPesanan';
+import HalamanDataPeserta from './pages/admin/HalamanDataPeserta';
+import HalamanRekapitulasi from './pages/owner/HalamanRekapitulasi';
 
 export default function App() {
     return (
         <AuthProvider>
             <Routes>
                 <Route element={<Layout />}>
-                    <Route index element={<KatalogPage />} />
-                    <Route path="/paket" element={<KatalogPage />} />
-                    <Route path="/paket/:id" element={<DetailPaketPage />} />
+                    <Route index element={<HalamanKatalog />} />
+                    <Route path="/paket" element={<HalamanKatalog />} />
+                    <Route path="/paket/:id" element={<HalamanDetail />} />
                     <Route
                         path="/paket/:id/pesan"
                         element={
                             <RequireRole roles={['customer']}>
-                                <FormPemesananPage />
+                                <HalamanFormPemesanan />
                             </RequireRole>
                         }
                     />
@@ -47,16 +41,16 @@ export default function App() {
                         path="/pesanan/:id/rating"
                         element={
                             <RequireRole roles={['customer']}>
-                                <RatingPage />
+                                <FormPenilaian />
                             </RequireRole>
                         }
                     />
-                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/login" element={<HalamanLogin />} />
                     <Route
                         path="/pesanan-saya"
                         element={
                             <RequireRole roles={['customer']}>
-                                <PesananSayaPage />
+                                <HalamanPesananSaya />
                             </RequireRole>
                         }
                     />
@@ -64,7 +58,7 @@ export default function App() {
                         path="/pesanan/:id/data-peserta"
                         element={
                             <RequireRole roles={['customer']}>
-                                <FormPesertaPage />
+                                <FormPeserta />
                             </RequireRole>
                         }
                     />
@@ -72,7 +66,13 @@ export default function App() {
                         path="/pesanan/:id/verifikasi"
                         element={
                             <RequireRole roles={['customer']}>
-                                <HalamanStatusVerifikasi />
+                                <StatusScreen
+                                    title="Menunggu Verifikasi"
+                                    description="Data peserta sedang diperiksa admin. Kamu akan mendapat notifikasi ketika sudah siap dibayar."
+                                    hint="Pastikan kontak dan email aktif agar update status tidak terlewat."
+                                    actionLabel="Kembali ke pesanan"
+                                    actionHref="/pesanan-saya"
+                                />
                             </RequireRole>
                         }
                     />
@@ -80,7 +80,13 @@ export default function App() {
                         path="/pesanan/:id/menunggu-pembayaran"
                         element={
                             <RequireRole roles={['customer']}>
-                                <HalamanMenungguPembayaran />
+                                <StatusScreen
+                                    title="Menunggu Pembayaran"
+                                    description="Data sudah diverifikasi. Lanjutkan pembayaran sesuai metode yang tersedia."
+                                    hint="Gunakan Midtrans untuk pembayaran cepat dan aman."
+                                    actionLabel="Pilih metode pembayaran"
+                                    actionHref="/pesanan-saya"
+                                />
                             </RequireRole>
                         }
                     />
@@ -88,7 +94,7 @@ export default function App() {
                         path="/pembayaran/:orderId/metode"
                         element={
                             <RequireRole roles={['customer']}>
-                                <PaymentMethodPage />
+                                <HalamanMetodePembayaran />
                             </RequireRole>
                         }
                     />
@@ -96,7 +102,13 @@ export default function App() {
                         path="/pembayaran/:orderId/status"
                         element={
                             <RequireRole roles={['customer']}>
-                                <HalamanStatusPembayaran />
+                                <StatusScreen
+                                    title="Status Pembayaran"
+                                    description="Transaksi sedang diproses. Jika kamu sudah membayar, status akan otomatis berubah ke pembayaran selesai."
+                                    hint="Jika status tidak berubah dalam 5 menit, hubungi admin dengan bukti bayar."
+                                    actionLabel="Kembali"
+                                    actionHref="/pesanan-saya"
+                                />
                             </RequireRole>
                         }
                     />
@@ -104,7 +116,12 @@ export default function App() {
                         path="/pembayaran/:orderId/selesai"
                         element={
                             <RequireRole roles={['customer']}>
-                                <HalamanPembayaranSelesai />
+                                <StatusScreen
+                                    title="Pembayaran Selesai"
+                                    description="Terima kasih! Pembayaranmu sudah diterima. Tim kami akan menyiapkan perjalananmu."
+                                    actionLabel="Lihat pesanan"
+                                    actionHref="/pesanan-saya"
+                                />
                             </RequireRole>
                         }
                     />
@@ -112,7 +129,12 @@ export default function App() {
                         path="/pesanan/:id/selesai"
                         element={
                             <RequireRole roles={['customer']}>
-                                <HalamanPesananSelesai />
+                                <StatusScreen
+                                    title="Pesanan Selesai"
+                                    description="Perjalananmu telah berakhir. Bagikan pengalaman melalui rating untuk membantu traveler lain."
+                                    actionLabel="Beri rating"
+                                    actionHref="/pesanan-saya"
+                                />
                             </RequireRole>
                         }
                     />
@@ -120,7 +142,7 @@ export default function App() {
                         path="/profil"
                         element={
                             <RequireRole roles={['admin', 'owner', 'customer']}>
-                                <ProfilePage />
+                                <MenuProfil />
                             </RequireRole>
                         }
                     />
@@ -135,12 +157,12 @@ export default function App() {
                     }
                 >
                     <Route index element={<Navigate to="/admin/paket" replace />} />
-                    <Route path="paket" element={<KelolaPaketPage />} />
-                    <Route path="paket/buat" element={<PaketFormPage />} />
-                    <Route path="paket/:id/edit" element={<PaketFormPage />} />
-                    <Route path="pesanan" element={<KelolaPesananPage />} />
-                    <Route path="pesanan/paket/:paketId" element={<PesananPage />} />
-                    <Route path="pesanan/order/:id" element={<PesertaAdminPage />} />
+                    <Route path="paket" element={<HalamanKelolaPaket />} />
+                    <Route path="paket/buat" element={<FormDataPaket />} />
+                    <Route path="paket/:id/edit" element={<FormDataPaket />} />
+                    <Route path="pesanan" element={<HalamanKelolaPesanan />} />
+                    <Route path="pesanan/paket/:paketId" element={<HalamanPesanan />} />
+                    <Route path="pesanan/order/:id" element={<HalamanDataPeserta />} />
                 </Route>
 
                 <Route
@@ -151,7 +173,7 @@ export default function App() {
                         </RequireRole>
                     }
                 >
-                    <Route path="rekapitulasi" element={<RekapitulasiPage />} />
+                    <Route path="rekapitulasi" element={<HalamanRekapitulasi />} />
                 </Route>
 
                 <Route path="*" element={<Navigate to="/" replace />} />

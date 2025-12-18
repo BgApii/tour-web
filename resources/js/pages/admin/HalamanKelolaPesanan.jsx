@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import { formatTanggalIndo } from '../../utils/date';
 
-export default function KelolaPesananPage() {
+export default function HalamanKelolaPesanan() {
     const { data: pesanan, loading: loadingPesanan, error: errorPesanan } = useFetch('/admin/pesanan');
     const { data: paket, loading: loadingPaket, error: errorPaket } = useFetch('/admin/paket');
 

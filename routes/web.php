@@ -26,9 +26,9 @@ use App\Http\Controllers\PaymentController;
 // LANDING PAGE & KATALOG
 // -----------------------------------------------------
 
-Route::get('/', [PaketTourController::class, 'index']);
+Route::get('/', [PaketTourController::class, 'ambilDataPaket']);
 Route::get('/paket/{paketTour}', [PaketTourController::class, 'show']);
-Route::get('/api/paket', [PaketTourController::class, 'index']);
+Route::get('/api/paket', [PaketTourController::class, 'ambilDataPaket']);
 Route::get('/api/paket/{paketTour}', [PaketTourController::class, 'show']);
 Route::get('/api/ratings', [PaketTourController::class, 'ratings']);
 
