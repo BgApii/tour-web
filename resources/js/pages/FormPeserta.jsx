@@ -64,16 +64,18 @@ const FormPeserta = () => {
     if (loading) return <p className="text-slate-600">Memuat form peserta...</p>;
 
     return (
-        <div className="space-y-6 pt-6 pb-6">
-            <div className="flex items-center justify-between">
-                <div>
-                    <p className="text-sm uppercase tracking-[0.2em] text-indigo-600 font-semibold">Data Peserta</p>
-                    <h1 className="text-3xl font-bold text-slate-900">Pesanan #{pesananData?.id}</h1>
-                    <p className="text-slate-600">Jumlah peserta: {pesertaCount}</p>
+        <div className="space-y-6 pt-6 pb-6 px-4 sm:px-6 lg:px-0 max-w-4xl mx-auto">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="space-y-1">
+                    <p className="text-xs sm:text-sm uppercase tracking-[0.2em] text-indigo-600 font-semibold">Data Peserta</p>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">
+                        Pesanan #{pesananData?.kode ?? pesananData?.id}
+                    </h1>
+                    <p className="text-slate-600 text-sm sm:text-base">Jumlah peserta: {pesertaCount}</p>
                 </div>
                 <button
                     onClick={() => navigate('/pesanan-saya')}
-                    className="text-sm text-indigo-700 font-semibold px-4 py-2 rounded-lg border border-indigo-200 hover:bg-indigo-50"
+                    className="w-full sm:w-auto text-center text-sm text-indigo-700 font-semibold px-4 py-2 rounded-lg border border-indigo-200 hover:bg-indigo-50"
                 >
                     Kembali
                 </button>
@@ -83,12 +85,12 @@ const FormPeserta = () => {
 
             <form className="space-y-4" onSubmit={submit}>
                 {peserta.map((item, idx) => (
-                    <div key={idx} className="border border-slate-200 rounded-2xl p-6 bg-white shadow-sm space-y-4">
-                        <div className="flex items-center justify-between">
+                    <div key={idx} className="border border-slate-200 rounded-2xl p-4 sm:p-6 bg-white shadow-sm space-y-4">
+                        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                             <p className="text-lg font-semibold text-slate-900">Peserta {idx + 1}</p>
-                            <span className="px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-semibold">Wajib</span>
+                            <span className="self-start px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-semibold">Wajib</span>
                         </div>
-                        <div className="grid md:grid-cols-2 gap-4">
+                        <div className="grid gap-3 sm:gap-4 md:grid-cols-2">
                             <div>
                                 <label className="text-sm font-semibold text-slate-700">Nama Lengkap</label>
                                 <input
@@ -127,7 +129,7 @@ const FormPeserta = () => {
                                 />
                             </div>
                             {wajibIdentitas && (
-                                <div>
+                                <div className="md:col-span-2">
                                     <label className="text-sm font-semibold text-slate-700">Upload Identitas</label>
                                     <input
                                         type="file"
@@ -139,7 +141,7 @@ const FormPeserta = () => {
                                 </div>
                             )}
                             {wajibPaspor && (
-                                <div>
+                                <div className="md:col-span-2">
                                     <label className="text-sm font-semibold text-slate-700">Upload Paspor</label>
                                     <input
                                         type="file"
@@ -154,12 +156,14 @@ const FormPeserta = () => {
                     </div>
                 ))}
 
-                <div className="flex items-center justify-between bg-slate-50 border border-slate-200 rounded-xl px-4 py-3">
-                    <p className="text-sm text-slate-600">Pastikan data benar sebelum dikirim.</p>
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between bg-slate-50 border border-slate-200 rounded-xl px-4 py-3">
+                    <p className="text-sm text-slate-600 text-center sm:text-left">
+                        Pastikan data benar sebelum dikirim.
+                    </p>
                     <button
                         type="submit"
                         disabled={saving}
-                        className="px-5 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 disabled:opacity-60"
+                        className="w-full sm:w-auto px-5 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 disabled:opacity-60"
                     >
                         {saving ? 'Menyimpan...' : 'Kirim Data'}
                     </button>

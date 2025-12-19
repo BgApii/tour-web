@@ -35,7 +35,7 @@ export default function HalamanKelolaPesanan() {
     const error = errorPesanan || errorPaket;
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 pt-6 pb-10">
             <div>
                 <p className="text-sm uppercase tracking-[0.2em] text-indigo-600 font-semibold">Halaman Kelola Pesanan</p>
                 <h1 className="text-3xl font-bold text-slate-900">Monitor pesanan customer</h1>

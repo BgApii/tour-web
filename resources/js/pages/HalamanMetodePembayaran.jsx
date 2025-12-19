@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import api from '../lib/api';
 import useFetch from '../hooks/useFetch';
 
@@ -13,11 +13,11 @@ const VA_METHODS = [
     { code: 'seabank', name: 'SeaBank', color: '#f36f21' },
     { code: 'danamon', name: 'Danamon', color: '#f7941d' },
     { code: 'bsi', name: 'BSI', color: '#0d9488' },
-    { code: 'other', name: 'Bank Lain', color: '#475569' },
 ];
 
 export default function HalamanMetodePembayaran() {
     const { orderId } = useParams();
+    const navigate = useNavigate();
     const { data: pesanan, loading } = useFetch(`/pesanan/${orderId}/peserta`);
     const [error, setError] = useState(null);
     const [processing, setProcessing] = useState(false);
@@ -112,18 +112,35 @@ export default function HalamanMetodePembayaran() {
     if (loading) return <p className="text-slate-600">Memuat pembayaran...</p>;
 
     return (
-        <div className="max-w-2xl mx-auto space-y-6">
-            <div className="bg-white border border-slate-200 rounded-3xl shadow p-6 space-y-3">
-                <p className="text-sm uppercase tracking-[0.2em] text-indigo-600 font-semibold">Halaman Metode Pembayaran</p>
-                <h1 className="text-3xl font-bold text-slate-900">Pesanan #{pesanan?.id}</h1>
-                <p className="text-slate-600">Pilih metode pembayaran Midtrans untuk paket {pesanan?.paket_tour?.nama_paket}.</p>
+        <div className="max-w-xl mx-auto space-y-5 pt-6 pb-10 px-4 sm:px-0">
+            <div className="bg-white border border-slate-200 rounded-2xl shadow p-5 space-y-4">
+                <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-1">
+                        <p className="text-xs uppercase tracking-[0.2em] text-indigo-600 font-semibold">Halaman Metode Pembayaran</p>
+                        <h1 className="text-2xl font-bold text-slate-900">Pesanan #{pesanan?.kode ?? pesanan?.id}</h1>
+                        <p className="text-sm text-slate-600">
+                            Pilih metode pembayaran untuk paket {pesanan?.paket_tour?.nama_paket}.
+                        </p>
+                        <p className="text-xs text-slate-500">Batas waktu pembayaran: 24 jam setelah VA dibuat.</p>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={() => navigate(-1)}
+                        className="inline-flex items-center justify-center h-10 w-10 rounded-full bg-slate-100 border border-slate-200 text-slate-600 hover:bg-slate-200"
+                        aria-label="Kembali"
+                    >
+                        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 6l12 12M18 6L6 18" />
+                        </svg>
+                    </button>
+                </div>
                 <div className="space-y-3">
                     <p className="text-sm font-semibold text-slate-800">Virtual Account Bank</p>
-                    <div className="grid md:grid-cols-2 gap-3">
+                    <div className="grid md:grid-cols-2 gap-2.5">
                         {VA_METHODS.map((va) => (
                             <label
                                 key={va.code}
-                                className={`flex items-center gap-3 border rounded-xl px-4 py-3 cursor-pointer transition ${
+                                className={`flex items-center gap-3 border rounded-xl px-4 py-3 cursor-pointer transition text-sm ${
                                     selectedVa === va.code ? 'border-indigo-400 bg-indigo-50 shadow-sm' : 'border-slate-200 bg-white'
                                 }`}
                             >
@@ -136,10 +153,13 @@ export default function HalamanMetodePembayaran() {
                                     className="text-indigo-600"
                                 />
                                 <span
-                                    className="inline-flex items-center justify-center h-10 w-10 rounded-full text-white font-bold uppercase"
-                                    style={{ backgroundColor: va.color }}
+                                    className="inline-flex items-center justify-center h-10 w-10 rounded-md border border-slate-200 bg-white overflow-hidden"
                                 >
-                                    {va.name.split(' ').map((w) => w[0]).join('').slice(0, 3)}
+                                    <img
+                                        src={`/images/${va.code}.png`}
+                                        alt={`Logo ${va.name}`}
+                                        className="h-8 w-8 object-contain"
+                                    />
                                 </span>
                                 <span className="font-semibold text-slate-800">{va.name}</span>
                             </label>
@@ -149,7 +169,7 @@ export default function HalamanMetodePembayaran() {
                     <button
                         onClick={startVaPayment}
                         disabled={processing}
-                        className="px-4 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 disabled:opacity-60"
+                        className="px-4 py-2.5 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 disabled:opacity-60"
                     >
                         {processing ? 'Memproses pembayaran...' : 'Bayar Sekarang'}
                     </button>
@@ -162,11 +182,11 @@ export default function HalamanMetodePembayaran() {
             </div>
 
             {vaInfo && !paymentSuccess && (
-                <div className="bg-white border border-slate-200 rounded-3xl shadow p-6 space-y-4">
+                <div className="bg-white border border-slate-200 rounded-2xl shadow p-5 space-y-4">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm uppercase tracking-[0.2em] text-indigo-600 font-semibold">Instruksi Pembayaran</p>
-                            <h2 className="text-2xl font-bold text-slate-900">Virtual Account {vaInfo.bank?.toUpperCase()}</h2>
+                            <p className="text-xs uppercase tracking-[0.2em] text-indigo-600 font-semibold">Instruksi Pembayaran</p>
+                            <h2 className="text-xl font-bold text-slate-900">Virtual Account {vaInfo.bank?.toUpperCase()}</h2>
                         </div>
                     </div>
                     <div className="grid gap-3">
@@ -191,7 +211,7 @@ export default function HalamanMetodePembayaran() {
                         <button
                             onClick={midtransOrderId ? () => startPolling(midtransOrderId) : startVaPayment}
                             disabled={processing}
-                            className="px-4 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 disabled:opacity-60"
+                            className="px-4 py-2.5 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 disabled:opacity-60"
                         >
                             {processing ? 'Memproses...' : 'Refresh Status'}
                         </button>
@@ -201,12 +221,12 @@ export default function HalamanMetodePembayaran() {
             )}
 
             {paymentSuccess && (
-                <div className="bg-emerald-50 border border-emerald-200 rounded-3xl shadow p-6 text-center space-y-3">
+                <div className="bg-emerald-50 border border-emerald-200 rounded-2xl shadow p-5 text-center space-y-3">
                     <div className="flex justify-center">
                         <div className="h-16 w-16 rounded-full bg-emerald-600 text-white flex items-center justify-center text-3xl">✓</div>
                     </div>
-                    <h2 className="text-2xl font-bold text-emerald-800">Pembayaran Berhasil</h2>
-                    <p className="text-emerald-700">Terima kasih, pembayaran Anda telah kami terima.</p>
+                    <h2 className="text-xl font-bold text-emerald-800">Pembayaran Berhasil</h2>
+                    <p className="text-sm text-emerald-700">Terima kasih, pembayaran Anda telah kami terima.</p>
                 </div>
             )}
         </div>

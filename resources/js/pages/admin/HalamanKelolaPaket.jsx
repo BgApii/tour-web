@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import api from '../../lib/api';
 import useFetch from '../../hooks/useFetch';
 import { formatTanggalIndo } from '../../utils/date';
@@ -7,6 +7,16 @@ import { formatTanggalIndo } from '../../utils/date';
 export default function HalamanKelolaPaket() {
     const { data: paket, loading, error, refetch } = useFetch('/admin/paket');
     const [processing, setProcessing] = useState(false);
+    const [notice, setNotice] = useState(null);
+    const location = useLocation();
+    const navigate = useNavigate();
+    const successMessage = location.state?.successMessage;
+
+    useEffect(() => {
+        if (!successMessage) return;
+        setNotice(successMessage);
+        navigate(location.pathname, { replace: true, state: {} });
+    }, [successMessage, location.pathname, navigate]);
 
     const toggleVisibility = async (id, visible) => {
         setProcessing(true);
@@ -27,6 +37,7 @@ export default function HalamanKelolaPaket() {
         setProcessing(true);
         try {
             await api.delete(`/admin/paket/${id}`);
+            setNotice('Paket berhasil dihapus');
             refetch();
         } catch (err) {
             console.error(err);
@@ -36,7 +47,7 @@ export default function HalamanKelolaPaket() {
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 pt-6 pb-10">
             <div className="flex items-center justify-between">
                 <div>
                     <p className="text-sm uppercase tracking-[0.2em] text-indigo-600 font-semibold">Halaman Kelola Paket</p>
@@ -52,6 +63,19 @@ export default function HalamanKelolaPaket() {
 
             {loading && <p className="text-slate-600">Memuat paket...</p>}
             {error && <p className="text-red-600">Gagal memuat paket</p>}
+            {notice && (
+                <div className="flex items-center justify-between gap-4 text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3">
+                    <span>{notice}</span>
+                    <button
+                        type="button"
+                        onClick={() => setNotice(null)}
+                        className="text-emerald-700 hover:text-emerald-900 font-semibold"
+                        aria-label="Tutup pesan"
+                    >
+                        x
+                    </button>
+                </div>
+            )}
 
             <div className="bg-white border border-slate-200 shadow rounded-2xl overflow-hidden">
                 <table className="min-w-full divide-y divide-slate-200">

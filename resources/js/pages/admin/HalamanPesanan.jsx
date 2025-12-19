@@ -30,7 +30,7 @@ export default function HalamanPesanan() {
     }, [orders, paketDetail, state?.paket]);
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 pt-6 pb-10">
             <div className="flex items-start justify-between gap-4">
                 <div>
                     <p className="text-sm uppercase tracking-[0.2em] text-indigo-600 font-semibold">Pesanan Per Paket</p>
@@ -84,7 +84,7 @@ export default function HalamanPesanan() {
                                         <p className="text-sm text-slate-500">{order.user?.email ?? '-'}</p>
                                     </td>
                                     <td className="px-6 py-4 text-sm text-slate-700">
-                                        <p className="font-semibold text-slate-900">#{order.id}</p>
+                                        <p className="font-semibold text-slate-900">#{order.kode ?? order.id}</p>
                                         <p className="text-sm text-slate-500">Jumlah peserta: {order.jumlah_peserta}</p>
                                     </td>
                                     <td className="px-6 py-4">

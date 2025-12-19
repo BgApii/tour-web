@@ -27,17 +27,26 @@ export default function FormDataPaket() {
     });
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState(null);
+    const formatDateInput = (value) => {
+        if (!value) return '';
+        const raw = String(value);
+        if (raw.includes('T')) return raw.split('T')[0];
+        if (raw.includes(' ')) return raw.split(' ')[0];
+        return raw;
+    };
 
     useEffect(() => {
         if (existing) {
             setForm((prev) => ({
                 ...prev,
                 ...existing,
+                banner: null,
                 tampil_di_katalog: Boolean(existing.tampil_di_katalog),
                 wajib_paspor: Boolean(existing.wajib_paspor),
                 wajib_identitas: Boolean(existing.wajib_identitas),
                 lama_hari: existing.lama_hari ?? '',
                 lama_malam: existing.lama_malam ?? '',
+                jadwal_keberangkatan: formatDateInput(existing.jadwal_keberangkatan),
             }));
         }
     }, [existing]);
@@ -46,14 +55,34 @@ export default function FormDataPaket() {
 
     const submit = async (e) => {
         e.preventDefault();
-        setSaving(true);
         setError(null);
+        const requiredFields = [
+            'nama_paket',
+            'destinasi',
+            'include',
+            'harga_per_peserta',
+            'jadwal_keberangkatan',
+            'kuota',
+            'lama_hari',
+            'lama_malam',
+        ];
+        const hasEmptyRequired = requiredFields.some((field) => String(form[field] ?? '').trim() === '');
+        if (hasEmptyRequired || (!isEdit && !form.banner)) {
+            setError('Harap isi semua data');
+            return;
+        }
+        setSaving(true);
         try {
             const formData = new FormData();
             Object.entries(form).forEach(([key, value]) => {
-                if (value !== null && value !== undefined) {
-                    formData.append(key, value);
+                if (value === null || value === undefined) return;
+                if (key === 'banner') {
+                    if (value instanceof File || value instanceof Blob) {
+                        formData.append(key, value);
+                    }
+                    return;
                 }
+                formData.append(key, value);
             });
             if (isEdit) {
                 formData.append('_method', 'PUT');
@@ -63,7 +92,8 @@ export default function FormDataPaket() {
             } else {
                 await api.post('/admin/paket', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
             }
-            navigate('/admin/paket');
+            const successMessage = isEdit ? 'Paket berhasil diperbarui' : 'Paket berhasil di tambah';
+            navigate('/admin/paket', { state: { successMessage } });
         } catch (err) {
             setError(err.response?.data?.message || 'Gagal menyimpan paket');
         } finally {
@@ -72,7 +102,7 @@ export default function FormDataPaket() {
     };
 
     return (
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className="max-w-4xl mx-auto space-y-6 pt-6 pb-10">
             <div>
                 <p className="text-sm uppercase tracking-[0.2em] text-indigo-600 font-semibold">Form Data Paket</p>
                 <h1 className="text-3xl font-bold text-slate-900">{isEdit ? 'Edit Paket' : 'Tambah Paket'}</h1>
@@ -89,7 +119,6 @@ export default function FormDataPaket() {
                             className="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500"
                             value={form.nama_paket}
                             onChange={(e) => updateField('nama_paket', e.target.value)}
-                            required
                         />
                     </div>
                     <div>
@@ -98,7 +127,6 @@ export default function FormDataPaket() {
                             className="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500"
                             value={form.destinasi}
                             onChange={(e) => updateField('destinasi', e.target.value)}
-                            required
                         />
                     </div>
                     <div>
@@ -108,7 +136,6 @@ export default function FormDataPaket() {
                             className="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500"
                             value={form.harga_per_peserta}
                             onChange={(e) => updateField('harga_per_peserta', e.target.value)}
-                            required
                         />
                     </div>
                     <div>
@@ -118,7 +145,6 @@ export default function FormDataPaket() {
                             className="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500"
                             value={form.jadwal_keberangkatan ?? ''}
                             onChange={(e) => updateField('jadwal_keberangkatan', e.target.value)}
-                            required
                         />
                     </div>
                     <div>
@@ -128,7 +154,6 @@ export default function FormDataPaket() {
                             className="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500"
                             value={form.kuota}
                             onChange={(e) => updateField('kuota', e.target.value)}
-                            required
                         />
                     </div>
                     <div className="grid grid-cols-2 gap-3">
@@ -139,7 +164,6 @@ export default function FormDataPaket() {
                                 className="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500"
                                 value={form.lama_hari}
                                 onChange={(e) => updateField('lama_hari', e.target.value)}
-                                required
                             />
                         </div>
                         <div>
@@ -149,7 +173,6 @@ export default function FormDataPaket() {
                                 className="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500"
                                 value={form.lama_malam}
                                 onChange={(e) => updateField('lama_malam', e.target.value)}
-                                required
                             />
                         </div>
                     </div>
@@ -160,7 +183,6 @@ export default function FormDataPaket() {
                             className="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500"
                             value={form.include}
                             onChange={(e) => updateField('include', e.target.value)}
-                            required
                         />
                     </div>
                     <div>

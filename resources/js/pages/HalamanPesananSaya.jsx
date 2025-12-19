@@ -99,7 +99,7 @@ export default function HalamanPesananSaya() {
                         <div key={order.id} className="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 space-y-4">
                             <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                                 <div className="space-y-1">
-                                    <p className="text-sm text-slate-500">Paket</p>
+                                    <p className="text-xs text-slate-500">ID #{order.kode ?? order.id}</p>
                                     <h2 className="text-xl font-semibold text-slate-900">{order.paket_tour?.nama_paket}</h2>
                                     <p className="text-sm text-slate-600">Jumlah peserta: {order.jumlah_peserta}</p>
                                 </div>
@@ -122,17 +122,19 @@ export default function HalamanPesananSaya() {
                             )}
 
                             {filter === 'menunggu_pembayaran' && (
-                                <div className="border border-slate-200 rounded-xl p-4 bg-slate-50 flex items-center justify-between gap-4">
-                                    <p className="text-xs text-slate-500">Lakukan pembayaran</p>
-                                    <p className="font-semibold text-slate-800 mt-2">
-                                        Total estimasi: Rp{' '}
-                                        {(
-                                            Number(order.paket_tour?.harga_per_peserta ?? 0) * (order.jumlah_peserta ?? 1)
-                                        ).toLocaleString('id-ID')}
-                                    </p>
+                                <div className="border border-slate-200 rounded-xl p-4 bg-slate-50 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                                    <div className="space-y-1">
+                                        <p className="text-xs text-slate-500">Lakukan pembayaran</p>
+                                        <p className="font-semibold text-slate-800">
+                                            Total: Rp{' '}
+                                            {(
+                                                Number(order.paket_tour?.harga_per_peserta ?? 0) * (order.jumlah_peserta ?? 1)
+                                            ).toLocaleString('id-ID')}
+                                        </p>
+                                    </div>
                                     <Link
                                         to={`/pembayaran/${order.id}/metode`}
-                                        className="mt-3 inline-flex px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700"
+                                        className="inline-flex px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700"
                                     >
                                         Bayar Sekarang
                                     </Link>

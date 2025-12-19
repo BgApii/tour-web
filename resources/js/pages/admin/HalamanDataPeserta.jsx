@@ -68,10 +68,10 @@ export default function HalamanDataPeserta() {
     const pesertaList = pesanan?.pesertas ?? [];
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 pt-6 pb-10">
             <div>
                 <p className="text-sm uppercase tracking-[0.2em] text-indigo-600 font-semibold">Halaman Data Peserta</p>
-                <h1 className="text-3xl font-bold text-slate-900">Pesanan #{pesanan?.id}</h1>
+                <h1 className="text-3xl font-bold text-slate-900">Pesanan #{pesanan?.kode ?? pesanan?.id}</h1>
                 <p className="text-slate-600">Verifikasi identitas peserta per pesanan.</p>
                 {pesanan?.alasan_penolakan && (
                     <div className="mt-3 text-sm text-red-700 bg-red-50 border border-red-100 rounded-xl px-4 py-3">
@@ -115,6 +115,7 @@ export default function HalamanDataPeserta() {
                 <table className="min-w-full divide-y divide-slate-200">
                     <thead className="bg-slate-50 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">
                         <tr>
+                            <th className="px-6 py-3">ID</th>
                             <th className="px-6 py-3">Nama</th>
                             <th className="px-6 py-3">Telepon</th>
                             <th className="px-6 py-3">Email</th>
@@ -126,6 +127,7 @@ export default function HalamanDataPeserta() {
                     <tbody className="divide-y divide-slate-100">
                         {pesertaList.map((p) => (
                             <tr key={p.id} className="hover:bg-slate-50/80">
+                                <td className="px-6 py-4 text-sm font-semibold text-slate-900">#{p.kode ?? p.id}</td>
                                 <td className="px-6 py-4">
                                     <p className="font-semibold text-slate-900">{p.nama_lengkap}</p>
                                 </td>
@@ -138,7 +140,7 @@ export default function HalamanDataPeserta() {
                         ))}
                         {pesertaList.length === 0 && (
                             <tr>
-                                <td className="px-6 py-6 text-center text-slate-500" colSpan={6}>
+                                <td className="px-6 py-6 text-center text-slate-500" colSpan={7}>
                                     Tidak ada peserta pada pesanan ini.
                                 </td>
                             </tr>

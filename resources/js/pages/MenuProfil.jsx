@@ -54,14 +54,19 @@ const MenuProfil = () => {
     if (loading) return <p className="text-slate-600">Memuat profil...</p>;
 
     return (
-        <div className="max-w-2xl mx-auto bg-white border border-slate-200 rounded-3xl shadow p-8 space-y-6">
-            <div>
-                <p className="text-sm uppercase tracking-[0.2em] text-indigo-600 font-semibold">Halaman Profile</p>
-                <h1 className="text-3xl font-bold text-slate-900">Perbarui informasi akun</h1>
-            </div>
-            {error && <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3">{error}</div>}
-            <div className="grid gap-8">
-                <div className="space-y-4">
+        <div className="pt-6 pb-10 px-4 sm:px-0">
+            <div className="max-w-xl mx-auto bg-white border border-slate-200 rounded-3xl shadow p-6 space-y-5">
+                <div>
+                    <p className="text-sm uppercase tracking-[0.2em] text-indigo-600 font-semibold">Halaman Profile</p>
+                    <h1 className="text-2xl font-bold text-slate-900">Perbarui informasi akun</h1>
+                </div>
+                {error && (
+                    <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3">
+                        {error}
+                    </div>
+                )}
+                <div className="grid gap-6">
+                    <div className="space-y-4">
                     <div>
                         <label className="text-sm font-semibold text-slate-700">Nama</label>
                         <input
@@ -85,59 +90,62 @@ const MenuProfil = () => {
                     </div>
                 </div>
 
-                <div className="border-t border-slate-200 pt-6">
-                    <p className="text-lg font-semibold text-slate-900 mb-2">Ubah Password</p>
-                    {passwordMessage && (
-                        <div className="text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 mb-3">
-                            {passwordMessage}
-                        </div>
-                    )}
-                    {passwordError && (
-                        <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3 mb-3">
-                            {passwordError}
-                        </div>
-                    )}
-                    <form className="space-y-4" onSubmit={submitPassword}>
-                        <div>
-                            <label className="text-sm font-semibold text-slate-700">Password Lama</label>
-                            <input
-                                type="password"
-                                className="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500"
-                                value={passwordForm.current_password}
-                                onChange={(e) => setPasswordForm({ ...passwordForm, current_password: e.target.value })}
-                                required
-                            />
-                        </div>
-                        <div>
-                            <label className="text-sm font-semibold text-slate-700">Password Baru</label>
-                            <input
-                                type="password"
-                                className="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500"
-                                value={passwordForm.password}
-                                onChange={(e) => setPasswordForm({ ...passwordForm, password: e.target.value })}
-                                required
-                            />
-                        </div>
-                        <div>
-                            <label className="text-sm font-semibold text-slate-700">Konfirmasi Password Baru</label>
-                            <input
-                                type="password"
-                                className="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500"
-                                value={passwordForm.password_confirmation}
-                                onChange={(e) =>
-                                    setPasswordForm({ ...passwordForm, password_confirmation: e.target.value })
-                                }
-                                required
-                            />
-                        </div>
-                        <button
-                            type="submit"
-                            disabled={passwordSaving}
-                            className="px-4 py-3 bg-slate-900 text-white rounded-lg font-semibold hover:bg-slate-800 disabled:opacity-60"
-                        >
-                            {passwordSaving ? 'Memproses...' : 'Ubah Password'}
-                        </button>
-                    </form>
+                    <div className="border-t border-slate-200 pt-6">
+                        <p className="text-lg font-semibold text-slate-900 mb-2">Ubah Password</p>
+                        {passwordMessage && (
+                            <div className="text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 mb-3">
+                                {passwordMessage}
+                            </div>
+                        )}
+                        {passwordError && (
+                            <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3 mb-3">
+                                {passwordError}
+                            </div>
+                        )}
+                        <form className="space-y-4" onSubmit={submitPassword}>
+                            <div>
+                                <label className="text-sm font-semibold text-slate-700">Password Lama</label>
+                                <input
+                                    type="password"
+                                    className="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500"
+                                    value={passwordForm.current_password}
+                                    onChange={(e) =>
+                                        setPasswordForm({ ...passwordForm, current_password: e.target.value })
+                                    }
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="text-sm font-semibold text-slate-700">Password Baru</label>
+                                <input
+                                    type="password"
+                                    className="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500"
+                                    value={passwordForm.password}
+                                    onChange={(e) => setPasswordForm({ ...passwordForm, password: e.target.value })}
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="text-sm font-semibold text-slate-700">Konfirmasi Password Baru</label>
+                                <input
+                                    type="password"
+                                    className="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500"
+                                    value={passwordForm.password_confirmation}
+                                    onChange={(e) =>
+                                        setPasswordForm({ ...passwordForm, password_confirmation: e.target.value })
+                                    }
+                                    required
+                                />
+                            </div>
+                            <button
+                                type="submit"
+                                disabled={passwordSaving}
+                                className="px-4 py-3 bg-slate-900 text-white rounded-lg font-semibold hover:bg-slate-800 disabled:opacity-60"
+                            >
+                                {passwordSaving ? 'Memproses...' : 'Ubah Password'}
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

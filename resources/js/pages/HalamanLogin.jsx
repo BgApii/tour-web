@@ -28,7 +28,7 @@ export default function HalamanLogin() {
                 navigate(redirectTo, { replace: true });
             }
         } catch (err) {
-            setError(err.response?.data?.message || 'Login gagal');
+            setError('Email atau password tidak valid');
         } finally {
             setLoading(false);
         }
@@ -45,7 +45,7 @@ export default function HalamanLogin() {
                     <span className="text-lg" aria-hidden="true">&larr;</span> Kembali ke Katalog
                 </button>
                 <div className="space-y-1">
-                    <p className="text-xs uppercase tracking-[0.2em] text-indigo-600 font-semibold">Halaman Login</p>
+                    <p className="text-xs uppercase tracking-[0.2em] text-indigo-600 font-semibold">Login</p>
                     <h1 className="text-xl font-bold text-slate-900">Masuk ke akunmu</h1>
                     <p className="text-sm text-slate-600">Gunakan email dan password yang sudah terdaftar.</p>
                 </div>
@@ -60,7 +60,6 @@ export default function HalamanLogin() {
                             className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500"
                             value={form.email}
                             onChange={(e) => setForm({ ...form, email: e.target.value })}
-                            required
                         />
                     </div>
                     <div className="space-y-1">
@@ -70,7 +69,6 @@ export default function HalamanLogin() {
                             className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500"
                             value={form.password}
                             onChange={(e) => setForm({ ...form, password: e.target.value })}
-                            required
                         />
                     </div>
                     <button
